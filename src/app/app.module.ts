@@ -24,6 +24,8 @@ import { UnderConstructionComponent } from './shared/components/under-constructi
 import { EmployeeService } from './services/employee.service';
 import { AuthService } from './services/auth.service';
 import { DecimalPipe } from '@angular/common';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbdSortableHeader } from './shared/utils/sortable.directive';
 
 @NgModule({
   declarations: [
@@ -34,7 +36,8 @@ import { DecimalPipe } from '@angular/common';
     LogoutComponent,
     LoginComponent,
     EmployeeListComponent, 
-    EmployeeCardComponent, UnauthorisedComponent, SideMenuComponent, TopMenuComponent, UnderConstructionComponent
+    EmployeeCardComponent, UnauthorisedComponent, SideMenuComponent, TopMenuComponent, UnderConstructionComponent, 
+    NgbdSortableHeader
   ],
   imports: [
     BrowserModule,
@@ -45,7 +48,8 @@ import { DecimalPipe } from '@angular/common';
     HttpClientModule,
     RouterModule.forRoot([
       { path: 'authentication', loadChildren: () => import('./shared/modules/authentication/authentication.module').then(m => m.AuthenticationModule) }
-    ])
+    ]),
+    NgbModule
   ],
   providers: [
     ManagerGuardGuard, 

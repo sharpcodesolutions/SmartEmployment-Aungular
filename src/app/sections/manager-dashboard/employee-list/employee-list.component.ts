@@ -6,6 +6,7 @@ import { EmployeeService } from 'src/app/services/employee.service';
 import { NgbdSortableHeader, SortEvent } from 'src/app/shared/utils/sortable.directive';
 import { createHttpObservable } from 'src/app/shared/utils/utils';
 import { IEmployee } from '../../models/employee.model';
+//import {NgbPaginationModule, NgbAlertModule} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-employee-list',
