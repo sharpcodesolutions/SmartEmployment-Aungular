@@ -1,4 +1,4 @@
-<div class="m-3 p-5 border-1 bg-white">
+<div>
 	<p>This is a more complete example with a service that simulates server calling:</p>
 
 	<ul>
@@ -26,10 +26,15 @@
 		<table class="table table-striped">
 			<thead>
 				<tr>
-					<th scope="col">#</th>
-					<th scope="col" sortable="firstname" (sort)="onSort($event)">Employee</th>
-					<th scope="col" sortable="lastname" (sort)="onSort($event)">Area</th>
-					<th scope="col" sortable="employeeCode" (sort)="onSort($event)">Population</th>
+					<th scope="col">Id</th>
+					<th scope="col" sortable="firstname" (sort)="onSort($event)">First name</th>
+					<th scope="col" sortable="lastname" (sort)="onSort($event)">Last name</th>
+					<th scope="col" sortable="employeeCode" (sort)="onSort($event)">Employee code</th>
+					<th scope="col" sortable="companyCode" (sort)="onSort($event)">Company code code</th>
+					<th scope="col" sortable="employeeEmail" (sort)="onSort($event)">Employee email</th>
+					<th scope="col" sortable="birthdate" (sort)="onSort($event)">Date of birth</th>
+					<th scope="col" sortable="startdate" (sort)="onSort($event)">Start date</th>
+					<th scope="col" sortable="terminationDate" (sort)="onSort($event)">Termination date</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -40,6 +45,11 @@
 					</td>
 					<td><ngb-highlight [result]="employee.lastname" [term]="employeeService.searchTerm"></ngb-highlight></td>
 					<td><ngb-highlight [result]="employee.employeeCode" [term]="employeeService.searchTerm"></ngb-highlight></td>
+					<td><ngb-highlight [result]="employee.companyCode" [term]="employeeService.searchTerm"></ngb-highlight></td>
+					<td><ngb-highlight [result]="employee.employeeEmail" [term]="employeeService.searchTerm"></ngb-highlight></td>
+					<td>{{ employee.birthdate | date:'dd-MM-yyyy' }}</td>
+					<td>{{ employee.startdate | date:'dd-MM-yyyy' }}</td>
+					<td>{{ employee.terminationDate | date:'dd-MM-yyyy' }}</td>
 				</tr>
 			</tbody>
 		</table>
