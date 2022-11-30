@@ -20,7 +20,7 @@ interface State {
 	sortDirection: SortDirection;
 }
 
-const compare = (v1: string | number | Date, v2: string | number | Date) => (v1 < v2 ? -1 : v1 > v2 ? 1 : 0);
+const compare = (v1?: string | number | Date, v2?: string | number | Date) => (v1! < v2! ? -1 : v1! > v2! ? 1 : 0);
 
 function sort(employees: IEmployee[], column: SortColumn, direction: string): IEmployee[] {
 	if (direction === '' || column === '') {
@@ -36,8 +36,9 @@ function sort(employees: IEmployee[], column: SortColumn, direction: string): IE
 function matches(employee: IEmployee, term: string, pipe: PipeTransform) {
 	return (
 		employee.firstname.toLowerCase().includes(term.toLowerCase()) ||
-		pipe.transform(employee.employeeCode).includes(term) ||
-		pipe.transform(employee.companyCode).includes(term)
+		employee.lastname.toLowerCase().includes(term.toLowerCase()) ||
+		employee.employeeCode.toLowerCase().includes(term.toLowerCase()) ||
+		employee.employeeEmail.toLowerCase().includes(term.toLowerCase()) 
 	);
 }
 
@@ -73,8 +74,8 @@ export class EmployeeService {
 
 		this._search$.next();
 
-     this.http.get<IEmployee[]>('https://localhost:7197/api/Employees/' + 
-      this.authService.authUserSub.getValue().username).subscribe(employees => {
+     	this.http.get<IEmployee[]>('https://localhost:7197/api/Employees/' + 
+      		this.authService.authUserSub.getValue().username).subscribe(employees => {
         this._employees = employees;
       });
 	}
