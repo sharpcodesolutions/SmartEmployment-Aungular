@@ -31,7 +31,7 @@ export class ManagerGuardGuard implements CanActivate {
    }
 
    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-      const user = this.authService.authUserSub.getValue(); 
+      const user = this.authService.getCurrUser(); 
       // const roles = route.data['roles'];
       if(user && this.isManager) {
          return true;

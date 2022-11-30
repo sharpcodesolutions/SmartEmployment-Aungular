@@ -75,7 +75,7 @@ export class EmployeeService {
 		this._search$.next();
 
      	this.http.get<IEmployee[]>('https://localhost:7197/api/Employees/' + 
-      		this.authService.authUserSub.getValue().username).subscribe(employees => {
+      		this.authService.getCurrUser().username).subscribe(employees => {
         this._employees = employees;
       });
 	}

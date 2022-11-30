@@ -1,5 +1,7 @@
+import { JsonPipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { UrlSerializer } from '@angular/router';
 
 import { Observable, Subject, of, BehaviorSubject } from 'rxjs';
 import { tap, delay } from 'rxjs/operators';
@@ -15,14 +17,22 @@ export class AuthService {
    private authChangeSub = new Subject<boolean>(); 
    public authChanged = this.authChangeSub.asObservable(); 
 
-   public authUserSub: BehaviorSubject<User> = new BehaviorSubject<User>(null!); 
+   private authUserSub = new Subject<User>(); 
    public authUserChanged = this.authUserSub.asObservable(); 
 
-   public isManagerSub = new Subject<boolean>();  
+   private isManagerSub = new Subject<boolean>();  
    public isManagerChanged = this.isManagerSub.asObservable();
 
    constructor(private http: HttpClient, private envUrl: EnvironmentUrlService) { 
-      this.isAuthenticated();
+      // this.authChangeSub.next(false); 
+      if(localStorage["token"]) {
+         this.authChangeSub.next(true); 
+         this.authUserSub.next(localStorage["user"]); 
+      }
+      else { 
+         this.authChangeSub.next(false); 
+         this.authUserSub.next(null!); 
+      }          
    }
 
    public loginUser = (route: string, body: UserForAuthenticationDto) => {
@@ -39,23 +49,36 @@ export class AuthService {
       this.authChangeSub.next(isAuthenticated);
       this.authUserSub.next(user); 
       this.isManagerSub.next(isManager);
-      this.isAuthenticated();
-      this.isUserManager();
+      // this.isAuthenticated();
+      // this.isUserManager();
    }
 
    public isAuthenticated = () => {
-      if(localStorage["token"]) {
-         this.authChangeSub.next(true)
-         this.authUserSub = new BehaviorSubject<User>(JSON.parse(localStorage.getItem("user")!));
-         this.authUserChanged = this.authUserSub.asObservable(); 
+      if(localStorage["token"] && localStorage["user"]) {
+         // this.authChangeSub.next(true)
+         // this.authUserSub = new BehaviorSubject<User>(JSON.parse(localStorage.getItem("user")!));
+         // this.authUserChanged = this.authUserSub.asObservable(); 
          return true;
       }          
       else
       {
          this.authChangeSub.next(false)
          this.authUserSub = new BehaviorSubject<User>(null!);
-         this.authUserChanged = this.authUserSub.asObservable(); 
+         // this.authUserChanged = this.authUserSub.asObservable(); 
+         this.sendAuthStateChangeNotification(false, null!, false);
          return false; 
+      }
+   }
+
+   public getCurrUser = (): User => {
+      if(localStorage["token"]) {
+         let user:User = JSON.parse(localStorage["user"]);
+         return user; 
+      }          
+      else
+      {
+         let user:User = {};
+         return user;
       }
    }
 

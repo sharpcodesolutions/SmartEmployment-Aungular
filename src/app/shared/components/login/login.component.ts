@@ -59,7 +59,7 @@ export class LoginComponent implements OnInit {
 
                console.log('the token is: ' + roles);
                roles = String(roles).split(',');
-               console.log('the roles now are: ' + roles);
+               console.log('user at login is: ' + JSON.stringify(user));
                console.log('isManager at loginn is: ' + (roles.indexOf('Manager') !== -1));
                this.authService.sendAuthStateChangeNotification(res.isAuthSuccessful, user, roles.indexOf('Manager') !== -1);
                this.router.navigate([this.returnUrl]);
