@@ -29,7 +29,7 @@ export class EmployeeListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('are u hitting this?');
+    console.log('from the employee list');
     this.isUserAuthenticated = this.authService.isAuthenticated(); 
     this.authService.authChanged
     .subscribe(res => {

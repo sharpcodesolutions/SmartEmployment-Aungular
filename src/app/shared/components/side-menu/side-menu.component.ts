@@ -31,6 +31,7 @@ export class SideMenuComponent implements OnInit {
       this.isManager = res;
     });
     console.log('isManager is: ' + this.isManager + ' and the subject is: ');
+    console.log('from the side menu'); 
   }
 
 }

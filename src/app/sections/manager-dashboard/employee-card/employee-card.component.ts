@@ -14,6 +14,7 @@ export class EmployeeCardComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    console.log('from the employee card');
   }
 
 }
