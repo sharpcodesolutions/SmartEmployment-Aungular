@@ -1,1 +1,42 @@
-<p>schedule works!</p>
+<div>
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <td>Search...</td>
+                <th class="tbl-head">Mon</th>
+                <th class="tbl-head">Tue</th>
+                <th class="tbl-head">Wed</th>
+                <th class="tbl-head">Thu</th>
+                <th class="tbl-head">Fri</th>
+                <th class="tbl-head">Sat</th>
+                <th class="tbl-head">Sun</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let employee of employees$ | async">
+                <td>
+                    <div class="rounded-circle">
+                        <img class="rounded-circle" width="50" height="50" [src]="'../../../assets/images/'+ employee.id + '.jpeg'">
+                    </div>
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="d-flex justify-content-between p-2">
+        <ngb-pagination [collectionSize]="(total$ | async)!" [(page)]="employeeService.page" [pageSize]="employeeService.pageSize">
+        </ngb-pagination>
+
+        <select class="form-select" style="width: auto" name="pageSize" [(ngModel)]="employeeService.pageSize">
+            <option [ngValue]="2">2 items per page</option>
+            <option [ngValue]="4">4 items per page</option>
+            <option [ngValue]="6">6 items per page</option>
+        </select>
+    </div>
+</div>

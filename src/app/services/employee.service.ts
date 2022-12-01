@@ -48,7 +48,7 @@ export class EmployeeService {
 	private _search$ = new Subject<void>();
 	private _employees$ = new BehaviorSubject<IEmployee[]>([]);
 	private _total$ = new BehaviorSubject<number>(0);
-  private _employees: IEmployee[] = [];
+  	private _employees: IEmployee[] = [];
 
 	private _state: State = {
 		page: 1,
@@ -76,8 +76,8 @@ export class EmployeeService {
 
      	this.http.get<IEmployee[]>('https://localhost:7197/api/Employees/' + 
       		this.authService.getCurrUser().username).subscribe(employees => {
-        this._employees = employees;
-      });
+			this._employees = employees;
+		});
 	}
 
 	get employees$() {

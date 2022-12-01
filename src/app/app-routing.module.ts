@@ -21,7 +21,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'logout', component: LogoutComponent },
   { path: 'underconstruction', component: UnderConstructionComponent},
-  { path: 'schedule', loadChildren: () => import('./sections/manager-dashboard/schedule/schedule.module').then(x => x.ScheduleModule)},
+  { path: 'schedule', loadChildren: () => import('./sections/manager-dashboard/schedule/schedule.module').then(x => x.ScheduleModule), canActivate: [ManagerGuardGuard] },
   { path: '**', redirectTo: 'mamanger', pathMatch: 'full' },
 ];
 
