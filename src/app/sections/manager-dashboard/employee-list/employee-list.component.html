@@ -17,6 +17,7 @@
 		<table class="table table-striped">
 			<thead>
 				<tr>
+					<th></th>
 					<th scope="col">Id</th>
 					<th scope="col" sortable="firstname" (sort)="onSort($event)">First name</th>
 					<th scope="col" sortable="lastname" (sort)="onSort($event)">Last name</th>
@@ -30,6 +31,11 @@
 			</thead>
 			<tbody>
 				<tr *ngFor="let employee of employees$ | async">
+					<td>
+						<div class="rounded-circle">
+							<img class="rounded-circle" width="50" height="50" [src]="'../../../assets/images/'+ employee.id + '.jpeg'">
+						</div>
+					</td>
 					<th scope="row">{{ employee.id }}</th>
 					<td>
 						<ngb-highlight [result]="employee.firstname" [term]="employeeService.searchTerm"></ngb-highlight>
