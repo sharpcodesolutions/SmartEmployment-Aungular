@@ -2,3 +2,9 @@
     color:blue;
     text-align: center;
 }
+
+.table td.fit, 
+.table th.fit {
+    white-space: nowrap;
+    width: 1%;
+}

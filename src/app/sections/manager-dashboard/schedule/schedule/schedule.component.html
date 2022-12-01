@@ -14,9 +14,13 @@
         </thead>
         <tbody>
             <tr *ngFor="let employee of employees$ | async">
-                <td>
-                    <div class="rounded-circle">
-                        <img class="rounded-circle" width="50" height="50" [src]="'../../../assets/images/'+ employee.id + '.jpeg'">
+                <td class="fit">
+                    <div class="d-flex">
+                        <img class="rounded-circle" width="50" height="50" [src]="'../../../assets/images/'+ employee.id + '.jpeg'"> 
+                        <div class="mx-2">
+                            <div>{{ employee.firstname + ' ' + employee.lastname }}</div> 
+                            <div><p class="fs-6 fw-bold">{{ employee.employeeCode }}</p></div>
+                        </div>
                     </div>
                 </td>
                 <td></td>
