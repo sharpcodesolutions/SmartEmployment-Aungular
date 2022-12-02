@@ -24,23 +24,68 @@
                     </div>
                 </td>
                 <td class="fit justify-content-center align-items-center">
-                    <div class="card"  *ngIf="getScheduleForEmployee(employee.id)">
+                    <div class="card"  *ngIf="getScheduleForEmployee(employee.id, currentWeekDays()[0])">
                         <div class="card-header">
-                            <b>{{ datePipe.transform(getScheduleForEmployee(employee.id).startTime, 'shortTime') + ' - ' + 
-                                datePipe.transform(getScheduleForEmployee(employee.id).endTime, 'shortTime') }}</b>
-                            <p>{{ getScheduleForEmployee(employee.id).comments }}</p> 
+                            <b>{{ datePipe.transform(getScheduleForEmployee(employee.id, currentWeekDays()[0]).startTime, 'shortTime') + ' - ' + 
+                                datePipe.transform(getScheduleForEmployee(employee.id, currentWeekDays()[0]).endTime, 'shortTime') }}</b>
+                            <p>{{ getScheduleForEmployee(employee.id, currentWeekDays()[0]).comments }}</p> 
                         </div>
-                        <!-- <div class="card-body">
-                            {{ getScheduleForEmployee(employee.id).comments }}
-                        </div> -->
                     </div>
                 </td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td class="fit justify-content-center align-items-center">
+                    <div class="card"  *ngIf="getScheduleForEmployee(employee.id, currentWeekDays()[1])">
+                        <div class="card-header">
+                            <b>{{ datePipe.transform(getScheduleForEmployee(employee.id, currentWeekDays()[1]).startTime, 'shortTime') + ' - ' + 
+                                datePipe.transform(getScheduleForEmployee(employee.id, currentWeekDays()[1]).endTime, 'shortTime') }}</b>
+                            <p>{{ getScheduleForEmployee(employee.id, currentWeekDays()[1]).comments }}</p> 
+                        </div>
+                    </div>
+                </td>
+                <td class="fit justify-content-center align-items-center">
+                    <div class="card"  *ngIf="getScheduleForEmployee(employee.id, currentWeekDays()[2])">
+                        <div class="card-header">
+                            <b>{{ datePipe.transform(getScheduleForEmployee(employee.id, currentWeekDays()[2]).startTime, 'shortTime') + ' - ' + 
+                                datePipe.transform(getScheduleForEmployee(employee.id, currentWeekDays()[2]).endTime, 'shortTime') }}</b>
+                            <p>{{ getScheduleForEmployee(employee.id, currentWeekDays()[2]).comments }}</p> 
+                        </div>
+                    </div>
+                </td>
+                <td class="fit justify-content-center align-items-center">
+                    <div class="card"  *ngIf="getScheduleForEmployee(employee.id, currentWeekDays()[3])">
+                        <div class="card-header">
+                            <b>{{ datePipe.transform(getScheduleForEmployee(employee.id, currentWeekDays()[3]).startTime, 'shortTime') + ' - ' + 
+                                datePipe.transform(getScheduleForEmployee(employee.id, currentWeekDays()[3]).endTime, 'shortTime') }}</b>
+                            <p>{{ getScheduleForEmployee(employee.id, currentWeekDays()[3]).comments }}</p> 
+                        </div>
+                    </div>
+                </td>
+                <td class="fit justify-content-center align-items-center">
+                    <div class="card"  *ngIf="getScheduleForEmployee(employee.id, currentWeekDays()[4])">
+                        <div class="card-header">
+                            <b>{{ datePipe.transform(getScheduleForEmployee(employee.id, currentWeekDays()[4]).startTime, 'shortTime') + ' - ' + 
+                                datePipe.transform(getScheduleForEmployee(employee.id, currentWeekDays()[4]).endTime, 'shortTime') }}</b>
+                            <p>{{ getScheduleForEmployee(employee.id, currentWeekDays()[4]).comments }}</p> 
+                        </div>
+                    </div>
+                </td>
+                <td class="fit justify-content-center align-items-center">
+                    <div class="card"  *ngIf="getScheduleForEmployee(employee.id, currentWeekDays()[5])">
+                        <div class="card-header">
+                            <b>{{ datePipe.transform(getScheduleForEmployee(employee.id, currentWeekDays()[5]).startTime, 'shortTime') + ' - ' + 
+                                datePipe.transform(getScheduleForEmployee(employee.id, currentWeekDays()[5]).endTime, 'shortTime') }}</b>
+                            <p>{{ getScheduleForEmployee(employee.id, currentWeekDays()[5]).comments }}</p> 
+                        </div>
+                    </div>
+                </td>
+                <td class="fit justify-content-center align-items-center">
+                    <div class="card"  *ngIf="getScheduleForEmployee(employee.id, currentWeekDays()[6])">
+                        <div class="card-header">
+                            <b>{{ datePipe.transform(getScheduleForEmployee(employee.id, currentWeekDays()[6]).startTime, 'shortTime') + ' - ' + 
+                                datePipe.transform(getScheduleForEmployee(employee.id, currentWeekDays()[6]).endTime, 'shortTime') }}</b>
+                            <p>{{ getScheduleForEmployee(employee.id, currentWeekDays()[6]).comments }}</p> 
+                        </div>
+                    </div>
+                </td>
             </tr>
         </tbody>
     </table>

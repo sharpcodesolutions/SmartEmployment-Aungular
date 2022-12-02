@@ -41,8 +41,8 @@ export class ScheduleComponent implements OnInit {
     console.log('the schedules are: ' + this.schedules$);
   }
 
-  getScheduleForEmployee(employeeId:number) : ISchedule {
-    let schedule = this.schedules.find(s => s.employeeId == employeeId)!;
+  getScheduleForEmployee(employeeId:number, date:Date) : ISchedule {
+    let schedule = this.schedules.find(s => s.employeeId == employeeId && this.datePipe.transform(s.date, 'shortDate') == this.datePipe.transform(date, 'shortDate'))!;
     // if(schedule)
     // {
     //   let startTime = new Date(schedule.startTime.toString()); 
@@ -50,5 +50,53 @@ export class ScheduleComponent implements OnInit {
     // }
     return schedule; 
     // schedule.startTime = this.datePipe.transform(schedule.startTime.toString().replace(' ', 'T'), 'HH:mm')!; // formatDate(`${schedule.startTime}`.replaceFunction('/','-'),'full','es-CO');
+  }
+
+  currentWeekDays() {
+    // If no date object supplied, use current date
+    // Copy date so don't modify supplied date
+    let days:Date[] = [];
+    var now = new Date();
+  
+    // set time to some convenient value
+    now.setHours(0,0,0,0);
+  
+    // Get the previous Monday
+    let monday = new Date(now);
+    monday.setDate(monday.getDate() - monday.getDay() + 1);
+    days[0] = monday; 
+    
+    let tuesday = new Date(now);
+    tuesday.setDate(tuesday.getDate() - tuesday.getDay() + 2);
+    days[1] = tuesday;
+    
+    let wednesday = new Date(now);
+    wednesday.setDate(wednesday.getDate() - wednesday.getDay() + 3);
+    days[2] = wednesday;
+
+    let thursday = new Date(now);
+    thursday.setDate(thursday.getDate() - thursday.getDay() + 4);
+    days[3] = thursday;
+
+    let friday = new Date(now);
+    friday.setDate(friday.getDate() - friday.getDay() + 5);
+    days[4] = friday;
+
+    let saturday = new Date(now);
+    saturday.setDate(saturday.getDate() - saturday.getDay() + 6);
+    days[5] = saturday;
+
+    let sunday = new Date(now);
+    sunday.setDate(sunday.getDate() - sunday.getDay() + 7);
+    days[6] = sunday;
+   
+    // Return array of date objects
+    return days;
+  }
+
+  addDays(date: Date, days: number): Date {
+    const day = date; 
+    day.setDate(date.getDate() + days);
+    return day;
   }
 }
