@@ -25,6 +25,14 @@
                 </td>
                 <td *ngFor="let day of currentWeekDays()" class="fit justify-content-center align-items-center">
                     <div class="card"  *ngIf="getScheduleForEmployee(employee.id, day)">
+                        <div class="d-flex">
+                            <div class="m-1" style="cursor: pointer">
+                                <fa-icon [icon]="faPencil"></fa-icon>
+                            </div>
+                            <div class="float-end m-1" style="cursor: pointer">
+                                <fa-icon [icon]="faTimes"></fa-icon>
+                            </div>
+                        </div>                        
                         <div class="card-header">
                             <b>{{ datePipe.transform(getScheduleForEmployee(employee.id, day).startTime, 'shortTime') + ' - ' + 
                                 datePipe.transform(getScheduleForEmployee(employee.id, day).endTime, 'shortTime') }}</b>

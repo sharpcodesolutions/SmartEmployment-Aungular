@@ -6,6 +6,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { EmployeeService } from 'src/app/services/employee.service';
 import { ISchedule } from '../schedule.model';
 import { ScheduleService } from '../schedule.service';
+import { faPencil, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-schedule',
@@ -18,6 +19,8 @@ export class ScheduleComponent implements OnInit {
   total$: Observable<number> = of(0);
   schedules$: Observable<ISchedule[]> = of([]);
   schedules: ISchedule[] = [];
+  faTimes = faTimes; 
+  faPencil = faPencil;
 
   constructor(private authService:AuthService, public employeeService:EmployeeService, public scheduleService:ScheduleService, public datePipe:DatePipe)
   {

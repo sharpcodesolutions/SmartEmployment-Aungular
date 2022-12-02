@@ -7,6 +7,7 @@ import { AppModule } from 'src/app/app.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { ScheduleService } from './schedule.service';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 const routes: Routes = [
   { path: 'schedule', component: ScheduleComponent }
@@ -21,7 +22,8 @@ const routes: Routes = [
     CommonModule, 
     RouterModule.forChild(routes), 
     NgbModule, 
-    FormsModule
+    FormsModule, 
+    FontAwesomeModule 
   ], 
   providers: [
     ScheduleService, 
