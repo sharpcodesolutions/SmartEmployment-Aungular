@@ -10,5 +10,18 @@
 }
 
 .card-header {
-    font-size: 12px;
+    font-size: 10px;
 }
+
+.my-fs-5 {
+    font-size: 13px;
+}
+
+.my-fs-6 {
+    font-size: 11px
+}
+
+.table-class {
+    table-layout: fixed;
+    width: 1100px; 
+ }
