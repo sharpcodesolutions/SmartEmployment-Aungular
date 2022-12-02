@@ -52,13 +52,13 @@ export class ScheduleService {
 
 		this._search$.next();
 
-    this.http.get<ISchedule[]>('https://localhost:7197/api/Employees/' + 
+    this.http.get<ISchedule[]>('https://localhost:7197/api/Employees/schedules/' + 
       this.authService.getCurrUser().username).subscribe(schedules => {
 			this._schedules = schedules;
 		});
   }
 
-  get employees$() {
+  get schedules$() {
 		return this._schedules$.asObservable();
 	}
 	get total$() {

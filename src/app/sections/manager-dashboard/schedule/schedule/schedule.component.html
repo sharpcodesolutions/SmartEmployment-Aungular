@@ -23,7 +23,18 @@
                         </div>
                     </div>
                 </td>
-                <td></td>
+                <td class="fit justify-content-center align-items-center">
+                    <div class="card"  *ngIf="getScheduleForEmployee(employee.id)">
+                        <div class="card-header">
+                            <b>{{ datePipe.transform(getScheduleForEmployee(employee.id).startTime, 'shortTime') + ' - ' + 
+                                datePipe.transform(getScheduleForEmployee(employee.id).endTime, 'shortTime') }}</b>
+                            <p>{{ getScheduleForEmployee(employee.id).comments }}</p> 
+                        </div>
+                        <!-- <div class="card-body">
+                            {{ getScheduleForEmployee(employee.id).comments }}
+                        </div> -->
+                    </div>
+                </td>
                 <td></td>
                 <td></td>
                 <td></td>

@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { ScheduleComponent } from './schedule/schedule.component';
 import { Routes, RouterModule, RoutesRecognized } from '@angular/router';
 import { AppModule } from 'src/app/app.module';
@@ -24,7 +24,8 @@ const routes: Routes = [
     FormsModule
   ], 
   providers: [
-    ScheduleService
+    ScheduleService, 
+    DatePipe
   ]
 })
 export class ScheduleModule { }
