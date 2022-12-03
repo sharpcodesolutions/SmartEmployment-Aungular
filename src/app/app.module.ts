@@ -27,6 +27,8 @@ import { DecimalPipe } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgbdSortableHeader } from './shared/utils/sortable.directive';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -50,7 +52,9 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     RouterModule.forRoot([
       { path: 'authentication', loadChildren: () => import('./shared/modules/authentication/authentication.module').then(m => m.AuthenticationModule) }
     ]),
-    NgbModule
+    NgbModule,
+    BrowserAnimationsModule, 
+    MatDialogModule
   ],
   providers: [
     ManagerGuardGuard, 

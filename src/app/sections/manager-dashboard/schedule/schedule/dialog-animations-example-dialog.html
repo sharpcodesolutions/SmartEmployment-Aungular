@@ -1,0 +1,8 @@
+<h1 mat-dialog-title class="m-1">Delete file</h1>
+<div mat-dialog-content class="m-1">
+  Are you you want to delete the schedule of employee: {{ data.employeeName }}
+</div>
+<div mat-dialog-actions class="m-1">
+  <button (click)="onClose()" mat-button mat-dialog-close class="m-1">No</button>
+  <button mat-button [mat-dialog-close]="data.schedule" class="m-1" cdkFocusInitial>Ok</button>
+</div>

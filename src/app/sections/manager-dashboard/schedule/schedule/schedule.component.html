@@ -30,7 +30,8 @@
                             <div class="m-1" style="cursor: pointer">
                                 <fa-icon [icon]="faPencil"></fa-icon>
                             </div>
-                            <div class="float-end m-1" style="cursor: pointer" (click)="DeleteSchedule(getScheduleForEmployee(employee.id, i).id)">
+                            <div class="float-end m-1" style="cursor: pointer" 
+                                (click)="openDialog('300ms', '150ms', employee.firstname, getScheduleForEmployee(employee.id, i))"> <!-- DeleteSchedule(getScheduleForEmployee(employee.id, i).id)"> -->
                                 <fa-icon [icon]="faTimes"></fa-icon>
                             </div>
                         </div>                        

@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import { Observable, map, of, BehaviorSubject } from 'rxjs';
 import { IEmployee } from 'src/app/sections/models/employee.model';
 import { AuthService } from 'src/app/services/auth.service';
@@ -7,6 +7,7 @@ import { EmployeeService } from 'src/app/services/employee.service';
 import { ISchedule } from '../schedule.model';
 import { ScheduleService } from '../schedule.service';
 import { faPencil, faTimes } from '@fortawesome/free-solid-svg-icons';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-schedule',
@@ -26,7 +27,8 @@ export class ScheduleComponent implements OnInit {
   faTimes = faTimes; 
   faPencil = faPencil;
 
-  constructor(private authService:AuthService, public employeeService:EmployeeService, public scheduleService:ScheduleService, public datePipe:DatePipe)
+  constructor(private authService:AuthService, public employeeService:EmployeeService, 
+    public scheduleService:ScheduleService, public datePipe:DatePipe, public dialog: MatDialog)
   {
 
   }
@@ -116,5 +118,46 @@ export class ScheduleComponent implements OnInit {
         this.schedules = schedules;
       });
     });
+  }
+
+  openDialog(enterAnimationDuration: string, exitAnimationDuration: string, employeeName: string, schedule: ISchedule): void {
+    const dialogRef = this.dialog.open(DialogAnimationsExampleDialog, {
+      width: '250px',
+      data: {employeeName: employeeName, schedule: schedule},
+      enterAnimationDuration,
+      exitAnimationDuration,
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result)
+      {
+        console.log('The dialog was closed' + result);
+        this.DeleteSchedule(result.id);
+      }
+    });
+  }
+}
+
+export interface IDialogData {
+  employeeName: string;
+  schedule: ISchedule;
+}
+
+@Component({
+  selector: 'dialog-animations-example-dialog',
+  templateUrl: './dialog-animations-example-dialog.html',
+})
+export class DialogAnimationsExampleDialog {
+
+  constructor(public dialogRef: MatDialogRef<DialogAnimationsExampleDialog>, @Inject(MAT_DIALOG_DATA) public data: IDialogData) {}
+
+  onClose() {
+    console.log('close clicked');
+    this.dialogRef.close();
+  }
+
+  onOk() {
+    console.log('ok clicked');
+    this.dialogRef.close();
   }
 }
