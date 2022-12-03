@@ -27,7 +27,8 @@
                 <td *ngFor="let day of currentWeekDays(); index as i " class="fit justify-content-center align-items-center">
                     <div class="card"  *ngIf="getScheduleForEmployee(employee.id, i)">
                         <div class="d-flex">
-                            <div class="m-1" style="cursor: pointer">
+                            <div class="m-1" style="cursor: pointer"
+                                (click)="openEditDialog('300ms', '150ms', employee.firstname, getScheduleForEmployee(employee.id, i))">
                                 <fa-icon [icon]="faPencil"></fa-icon>
                             </div>
                             <div class="float-end m-1" style="cursor: pointer" 

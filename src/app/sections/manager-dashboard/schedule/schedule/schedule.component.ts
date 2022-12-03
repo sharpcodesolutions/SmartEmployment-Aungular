@@ -120,6 +120,17 @@ export class ScheduleComponent implements OnInit {
     });
   }
 
+  UpdateSchedule(schedule:ISchedule)
+  {
+    console.log('update clicked');
+    this.scheduleService.UpdateSchedule(schedule).subscribe(() =>{
+      // this.schedules$ = this.scheduleService.GetSchedules(this.startDate, this.endDate);
+      this.scheduleService.GetSchedules(this.startDate, this.endDate).subscribe(schedules =>{
+        this.schedules = schedules;
+      });
+    });
+  }
+
   openDialog(enterAnimationDuration: string, exitAnimationDuration: string, employeeName: string, schedule: ISchedule): void {
     const dialogRef = this.dialog.open(DialogAnimationsExampleDialog, {
       width: '250px',
@@ -136,11 +147,45 @@ export class ScheduleComponent implements OnInit {
       }
     });
   }
+
+  openEditDialog(enterAnimationDuration: string, exitAnimationDuration: string, employeeName: string, schedule: ISchedule): void {
+    const dialogRef = this.dialog.open(DialogAnimationsEdit, {
+      width: '300px',
+      data: {employeeName: employeeName, schedule: schedule, startTime: schedule.startTime.toString(), endTime: schedule.endTime.toString()},
+      enterAnimationDuration,
+      exitAnimationDuration,
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      // console.log('ok or no? ' + ' ' + result.isOk);
+      if(result)
+      {
+        console.log('The eidt dialog was closed' + result.startTime + ' ' + result.endTime);
+        result.schedule.startTime = new Date(result.startTime); 
+        result.schedule.endTime = new Date(result.endTime); 
+        this.UpdateSchedule(result.schedule);
+      }
+      else 
+      {
+        this.scheduleService.GetSchedules(this.startDate, this.endDate).subscribe(schedules =>{
+          this.schedules = schedules;
+        });
+      }
+    });
+  }
 }
 
 export interface IDialogData {
   employeeName: string;
   schedule: ISchedule;
+}
+
+export interface IDialogEditData {
+  employeeName: string;
+  schedule: ISchedule;
+  startTime: string; 
+  endTime: string;
+  isOk: boolean;
 }
 
 @Component({
@@ -149,7 +194,9 @@ export interface IDialogData {
 })
 export class DialogAnimationsExampleDialog {
 
-  constructor(public dialogRef: MatDialogRef<DialogAnimationsExampleDialog>, @Inject(MAT_DIALOG_DATA) public data: IDialogData) {}
+  constructor(public dialogRef: MatDialogRef<DialogAnimationsExampleDialog>, @Inject(MAT_DIALOG_DATA) public data: IDialogData) {
+    dialogRef.disableClose = true;
+  }
 
   onClose() {
     console.log('close clicked');
@@ -158,6 +205,34 @@ export class DialogAnimationsExampleDialog {
 
   onOk() {
     console.log('ok clicked');
+    this.dialogRef.close();
+  }
+}
+
+@Component({
+  selector: 'dialog-animations-eidt',
+  templateUrl: './dialog-animations-edit.html',
+})
+export class DialogAnimationsEdit implements OnInit {
+
+  constructor(public dialogRef: MatDialogRef<DialogAnimationsEdit>, @Inject(MAT_DIALOG_DATA) public data: IDialogEditData) {
+    dialogRef.disableClose = true;
+  }
+
+  ngOnInit(): void {
+    // this.data.startTime = this.data.schedule.startTime.toString(); 
+    // this.data.endTime = this.data.schedule.endTime.toString(); 
+  }
+
+  onClose() {
+    console.log('close clicked');
+    this.data.isOk = false; 
+    this.dialogRef.close();
+  }
+
+  onOk() {
+    console.log('ok clicked');
+    this.data.isOk = true; 
     this.dialogRef.close();
   }
 }
