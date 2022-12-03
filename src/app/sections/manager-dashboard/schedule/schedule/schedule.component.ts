@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Observable, map, of } from 'rxjs';
+import { Observable, map, of, BehaviorSubject } from 'rxjs';
 import { IEmployee } from 'src/app/sections/models/employee.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { EmployeeService } from 'src/app/services/employee.service';
@@ -19,6 +19,10 @@ export class ScheduleComponent implements OnInit {
   total$: Observable<number> = of(0);
   schedules$: Observable<ISchedule[]> = of([]);
   schedules: ISchedule[] = [];
+  startDate$: BehaviorSubject<Date> = new BehaviorSubject<Date>(new Date());
+  endDate$: BehaviorSubject<Date> = new BehaviorSubject<Date>(new Date());
+  startDate: Date = new Date(); 
+  endDate: Date = new Date(); 
   faTimes = faTimes; 
   faPencil = faPencil;
 
@@ -37,22 +41,22 @@ export class ScheduleComponent implements OnInit {
 
     this.employees$ = this.employeeService.employees$;
     this.total$ = this.employeeService.total$; 
+    this.startDate$.next(this.currentWeekDays()[0]);
+    this.endDate$.next(this.currentWeekDays()[6]); 
+    this.startDate$.subscribe(date => this.startDate = date); 
+    this.endDate$.subscribe(date => this.endDate = date); 
+    this.schedules$ = this.scheduleService.GetSchedules(this.startDate, this.endDate);
 
-    this.schedules$ = this.scheduleService.schedules$;
-    this.scheduleService.schedules$.subscribe(schedules => this.schedules = schedules); 
-    this.schedules$.forEach(s => console.log(s));
+    this.scheduleService.GetSchedules(this.startDate, this.endDate).subscribe(schedules => {
+      this.schedules = schedules; 
+    });
+    // this.schedules$.forEach(s => console.log(s));
     console.log('the schedules are: ' + this.schedules$);
   }
 
-  getScheduleForEmployee(employeeId:number, date:Date) : ISchedule {
-    let schedule = this.schedules.find(s => s.employeeId == employeeId && this.datePipe.transform(s.date, 'shortDate') == this.datePipe.transform(date, 'shortDate'))!;
-    // if(schedule)
-    // {
-    //   let startTime = new Date(schedule.startTime.toString()); 
-    //   schedule.startTime = new Date(this.datePipe.transform(startTime, 'HH:mm')!);
-    // }
+  getScheduleForEmployee(employeeId:number, i:number) : ISchedule {
+    let schedule = this.schedules.find(s => s.employeeId === employeeId && s.dayIndex === i)!;
     return schedule; 
-    // schedule.startTime = this.datePipe.transform(schedule.startTime.toString().replace(' ', 'T'), 'HH:mm')!; // formatDate(`${schedule.startTime}`.replaceFunction('/','-'),'full','es-CO');
   }
 
   currentWeekDays() {
@@ -101,5 +105,16 @@ export class ScheduleComponent implements OnInit {
     const day = date; 
     day.setDate(date.getDate() + days);
     return day;
+  }
+
+  DeleteSchedule(id:number)
+  {
+    console.log('delete clicked');
+    this.scheduleService.DeleteSchedule(id).subscribe(() =>{
+      // this.schedules$ = this.scheduleService.GetSchedules(this.startDate, this.endDate);
+      this.scheduleService.GetSchedules(this.startDate, this.endDate).subscribe(schedules =>{
+        this.schedules = schedules;
+      });
+    });
   }
 }

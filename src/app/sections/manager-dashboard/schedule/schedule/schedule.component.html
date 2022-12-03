@@ -23,23 +23,25 @@
                         </div>
                     </div>
                 </td>
-                <td *ngFor="let day of currentWeekDays()" class="fit justify-content-center align-items-center">
-                    <div class="card"  *ngIf="getScheduleForEmployee(employee.id, day)">
+                <ng-container *ngIf="schedules$ | async as data">
+                <td *ngFor="let day of currentWeekDays(); index as i " class="fit justify-content-center align-items-center">
+                    <div class="card"  *ngIf="getScheduleForEmployee(employee.id, i)">
                         <div class="d-flex">
                             <div class="m-1" style="cursor: pointer">
                                 <fa-icon [icon]="faPencil"></fa-icon>
                             </div>
-                            <div class="float-end m-1" style="cursor: pointer">
+                            <div class="float-end m-1" style="cursor: pointer" (click)="DeleteSchedule(getScheduleForEmployee(employee.id, i).id)">
                                 <fa-icon [icon]="faTimes"></fa-icon>
                             </div>
                         </div>                        
                         <div class="card-header">
-                            <b>{{ datePipe.transform(getScheduleForEmployee(employee.id, day).startTime, 'shortTime') + ' - ' + 
-                                datePipe.transform(getScheduleForEmployee(employee.id, day).endTime, 'shortTime') }}</b>
-                            <p>{{ getScheduleForEmployee(employee.id, day).comments }}</p> 
+                            <b>{{ datePipe.transform(getScheduleForEmployee(employee.id, i).startTime, 'shortTime') + ' - ' + 
+                                datePipe.transform(getScheduleForEmployee(employee.id, i).endTime, 'shortTime') }}</b>
+                            <p>{{ getScheduleForEmployee(employee.id, i).comments }}</p> 
                         </div>
                     </div>
                 </td>
+                </ng-container>
             </tr>
         </tbody>
     </table>
