@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
-import { DialogAnimationsEdit, DialogAnimationsExampleDialog, ScheduleComponent } from './schedule/schedule.component';
+import { DialogAnimationsAdd, DialogAnimationsEdit, DialogAnimationsExampleDialog, ScheduleComponent } from './schedule/schedule.component';
 import { Routes, RouterModule, RoutesRecognized } from '@angular/router';
 import { AppModule } from 'src/app/app.module';
 // import { NgbdSortableHeader } from 'src/app/shared/utils/sortable.directive';
@@ -21,7 +21,8 @@ const routes: Routes = [
   declarations: [
     ScheduleComponent,
     DialogAnimationsExampleDialog, 
-    DialogAnimationsEdit
+    DialogAnimationsEdit, 
+    DialogAnimationsAdd
   ],
   imports: [
     CommonModule, 

@@ -6,7 +6,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { EmployeeService } from 'src/app/services/employee.service';
 import { ISchedule } from '../schedule.model';
 import { ScheduleService } from '../schedule.service';
-import { faPencil, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faPencil, faTimes, faPlus } from '@fortawesome/free-solid-svg-icons';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 
 @Component({
@@ -26,6 +26,7 @@ export class ScheduleComponent implements OnInit {
   endDate: Date = new Date(); 
   faTimes = faTimes; 
   faPencil = faPencil;
+  faPlus = faPlus;
 
   constructor(private authService:AuthService, public employeeService:EmployeeService, 
     public scheduleService:ScheduleService, public datePipe:DatePipe, public dialog: MatDialog)
@@ -173,6 +174,20 @@ export class ScheduleComponent implements OnInit {
       }
     });
   }
+
+  openAddDialog(enterAnimationDuration: string, exitAnimationDuration: string, employeeId: number, employeeName: string): void {
+    const dialogRef = this.dialog.open(DialogAnimationsEdit, {
+      width: '300px',
+      data: {employeeId: employeeId, employeeName: employeeName, schedule: null, startTime: '', endTime: ''},
+      enterAnimationDuration,
+      exitAnimationDuration,
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      // console.log('ok or no? ' + ' ' + result.isOk);
+      console.log('The add dialog was closed');
+    });
+  }
 }
 
 export interface IDialogData {
@@ -216,6 +231,34 @@ export class DialogAnimationsExampleDialog {
 export class DialogAnimationsEdit implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<DialogAnimationsEdit>, @Inject(MAT_DIALOG_DATA) public data: IDialogEditData) {
+    dialogRef.disableClose = true;
+  }
+
+  ngOnInit(): void {
+    // this.data.startTime = this.data.schedule.startTime.toString(); 
+    // this.data.endTime = this.data.schedule.endTime.toString(); 
+  }
+
+  onClose() {
+    console.log('close clicked');
+    this.data.isOk = false; 
+    this.dialogRef.close();
+  }
+
+  onOk() {
+    console.log('ok clicked');
+    this.data.isOk = true; 
+    this.dialogRef.close();
+  }
+}
+
+@Component({
+  selector: 'dialog-animations-add',
+  templateUrl: './dialog-animations-add.html',
+})
+export class DialogAnimationsAdd implements OnInit {
+
+  constructor(public dialogRef: MatDialogRef<DialogAnimationsAdd>, @Inject(MAT_DIALOG_DATA) public data: IDialogEditData) {
     dialogRef.disableClose = true;
   }
 

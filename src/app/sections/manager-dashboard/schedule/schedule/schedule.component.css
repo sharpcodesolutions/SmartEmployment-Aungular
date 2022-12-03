@@ -25,3 +25,31 @@
     table-layout: fixed;
     width: 1100px; 
  }
+
+ table .plus {
+    color: green;
+    text-align: center;
+  }
+
+  table .plus :hover {
+    color: greenyellow;
+  }
+
+  table .delete {
+    color: red;
+    text-align: center;
+  }
+
+  table .delete :hover {
+    color: orange;
+  }
+
+  table .pencil {
+    color: blue;
+    text-align: center;
+  }
+
+  table .pencil :hover {
+    color: lightskyblue;
+  }
+
