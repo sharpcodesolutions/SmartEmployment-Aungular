@@ -114,7 +114,6 @@ export class ScheduleComponent implements OnInit {
   {
     console.log('delete clicked');
     this.scheduleService.DeleteSchedule(id).subscribe(() =>{
-      // this.schedules$ = this.scheduleService.GetSchedules(this.startDate, this.endDate);
       this.scheduleService.GetSchedules(this.startDate, this.endDate).subscribe(schedules =>{
         this.schedules = schedules;
       });
@@ -125,7 +124,16 @@ export class ScheduleComponent implements OnInit {
   {
     console.log('update clicked');
     this.scheduleService.UpdateSchedule(schedule).subscribe(() =>{
-      // this.schedules$ = this.scheduleService.GetSchedules(this.startDate, this.endDate);
+      this.scheduleService.GetSchedules(this.startDate, this.endDate).subscribe(schedules =>{
+        this.schedules = schedules;
+      });
+    });
+  }
+
+  AddSchedule(schedule:ISchedule)
+  {
+    console.log('add clicked');
+    this.scheduleService.AddSchedule(schedule).subscribe(() =>{
       this.scheduleService.GetSchedules(this.startDate, this.endDate).subscribe(schedules =>{
         this.schedules = schedules;
       });
@@ -175,12 +183,12 @@ export class ScheduleComponent implements OnInit {
     });
   }
 
-  openAddDialog(enterAnimationDuration: string, exitAnimationDuration: string, employeeId: number, employeeName: string, dayIndex: number): void {
-    let newSchedule: ISchedule = {id: 0, employeeId: employeeId, date: new Date, dayIndex: dayIndex, 
+  openAddDialog(enterAnimationDuration: string, exitAnimationDuration: string, employeeId: number, employeeName: string, dayIndex: number, date: Date): void {
+    let newSchedule: ISchedule = {id: 0, employeeId: employeeId, date: date, dayIndex: dayIndex, 
       startTime: new Date(), endTime: new Date(), hours: 0, comments: '', taskId: 0};
     const dialogRef = this.dialog.open(DialogAnimationsEdit, {
       width: '300px',
-      data: {employeeId: employeeId, employeeName: employeeName, schedule: newSchedule, startTime: '', endTime: ''},
+      data: {employeeId: employeeId, employeeName: employeeName, schedule: newSchedule, startTime: newSchedule.startTime.toString(), endTime: newSchedule.endTime.toString()},
       enterAnimationDuration,
       exitAnimationDuration,
     });
@@ -188,10 +196,10 @@ export class ScheduleComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if(result)
       {
-        console.log('The eidt dialog was closed' + result.startTime + ' ' + result.endTime);
+        console.log('The add dialog was closed ' + result.startTime + ' ' + result.endTime);
         result.schedule.startTime = new Date(result.startTime); 
         result.schedule.endTime = new Date(result.endTime); 
-        this.UpdateSchedule(result.schedule);
+        this.AddSchedule(result.schedule);
       }
       else 
       {
