@@ -1,0 +1,12 @@
+.controls-conatiner {
+    width: 100%;
+    padding: 5%; 
+}
+
+.controls-conatiner > * {
+    width: 100%;
+}
+
+.button-row button {
+    margin: 5px;
+}

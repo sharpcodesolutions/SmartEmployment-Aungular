@@ -5,7 +5,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ManagerComponent } from './sections/manager-dashboard/manager/manager.component';
 import { PageNotFoundComponent } from './shared/components/page-not-found/page-not-found.component';
-import { EmployeeComponent } from './sections/employee-dashboard/employee/employee.component';
 import { LogoutComponent } from './shared/components/logout/logout.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EmployeeListComponent } from './sections/manager-dashboard/employee-list/employee-list.component';
@@ -29,6 +28,8 @@ import { NgbdSortableHeader } from './shared/utils/sortable.directive';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogModule } from '@angular/material/dialog';
+import { EmployeeModule } from './sections/manager-dashboard/employee-list/employee.module';
+import { EmployeeComponent } from './sections/manager-dashboard/employee-list/employee/employee.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     ]),
     NgbModule,
     BrowserAnimationsModule, 
-    MatDialogModule
+    MatDialogModule, 
+    EmployeeModule
   ],
   providers: [
     ManagerGuardGuard, 

@@ -1,4 +1,4 @@
-<div>
+<!-- <div>
     <table class="table table-striped table-bordered table-class m-0">
         <thead>
             <tr>
@@ -22,13 +22,6 @@
                             <p class="card-text m-0">{{ employee.employeeCode }}</p>
                         </div>
                     </div>
-                    <!-- <div class="d-flex justify-content-center align-items-center">
-                        <img class="rounded-circle" width="40" height="40" [src]="'../../../assets/images/'+ employee.id + '.jpeg'"> 
-                        <div class="mx-2">
-                            <div class="my-fs-5">{{ employee.firstname + ' ' + employee.lastname }}</div> 
-                            <div><p class="my-fs-6 fw-bold">{{ employee.employeeCode }}</p></div>
-                        </div>
-                    </div> -->
                 </td>
                 <ng-container *ngIf="schedules$ | async as data">
                 <td *ngFor="let day of currentWeekDays(); index as i " class="fit justify-content-center align-items-center">
@@ -41,7 +34,7 @@
                             <div class="float-end m-1 delete" style="cursor: pointer" 
                                 (click)="openDialog('300ms', '150ms', employee.firstname, getScheduleForEmployee(employee.id, i))"> <!-- DeleteSchedule(getScheduleForEmployee(employee.id, i).id)"> -->
                                 <fa-icon [icon]="faTimes"></fa-icon>
-                            </div>
+                            <!-- </div>
                         </div>                        
                         <div class="card-header">
                             <b>{{ datePipe.transform(getScheduleForEmployee(employee.id, i).startTime, 'shortTime') + ' - ' + 
@@ -75,4 +68,4 @@
             <option [ngValue]="6">6 items per page</option>
         </select>
     </div>
-</div>
+</div> --> 

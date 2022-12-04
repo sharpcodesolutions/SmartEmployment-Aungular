@@ -24,17 +24,17 @@ export class EmployeeListComponent implements OnInit {
   headers?: QueryList<NgbdSortableHeader>;
 
   constructor(private authService:AuthService, public employeeService: EmployeeService) {
-    this.employees$ = employeeService.employees$;
-    this.total$ = employeeService.total$; 
+    // this.employees$ = employeeService.employees$;
+    // this.total$ = employeeService.total$; 
   }
 
   ngOnInit(): void {
-    console.log('from the employee list');
-    this.isUserAuthenticated = this.authService.isAuthenticated(); 
-    this.authService.authChanged
-    .subscribe(res => {
-       this.isUserAuthenticated = res;
-  });
+    // console.log('from the employee list');
+    // this.isUserAuthenticated = this.authService.isAuthenticated(); 
+    // this.authService.authChanged
+    // .subscribe(res => {
+    //    this.isUserAuthenticated = res;
+  // });
     
     // const employees$ = this.http.get<IEmployee[]>('https://localhost:7197/api/Employees/' + 
     //   this.authService.authUserSub.getValue().username);
@@ -52,16 +52,16 @@ export class EmployeeListComponent implements OnInit {
     // );
   }
 
-  onSort({ column, direction }: SortEvent) {
-		// resetting other headers
-		this.headers?.forEach((header) => {
-			if (header.sortable !== column) {
-				header.direction = '';
-			}
-		});
+  // onSort({ column, direction }: SortEvent) {
+	// 	// resetting other headers
+	// 	this.headers?.forEach((header) => {
+	// 		if (header.sortable !== column) {
+	// 			header.direction = '';
+	// 		}
+	// 	});
 
-		this.employeeService.sortColumn = column;
-		this.employeeService.sortDirection = direction;
-	}
+	// 	this.employeeService.sortColumn = column;
+	// 	this.employeeService.sortDirection = direction;
+	// }
 
 }

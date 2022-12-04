@@ -1,0 +1,45 @@
+<form [formGroup]="employeeService.form"> 
+    <mat-grid-list cols="2" rowHeight="300px">
+        <mat-grid-tile>
+            <div class="controls-conatiner">
+                <input type="hidden" formControlName="$id">
+                <mat-form-field>
+                    <input formControlName="firstname" matInput placeholder="First name">
+                    <mat-error>This field is required.</mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <input formControlName="lastname" matInput placeholder="Last name">
+                </mat-form-field>
+                <mat-form-field>
+                    <input formControlName="employeeCode" matInput placeholder="Employee code">
+                </mat-form-field>
+                <mat-form-field>
+                    <input formControlName="employeeEmail" matInput placeholder="Employee email">
+                </mat-form-field>
+            </div>
+        </mat-grid-tile>
+        <mat-grid-tile>
+            <div class="controls-container">
+                <mat-form-field>
+                    <input formControlName="birthdate" matInput [matDatepicker]="picker" placeholder="Birthdate">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+                <mat-form-field>
+                    <input formControlName="startdate" matInput [matDatepicker]="picker1" placeholder="Start date">
+                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                </mat-form-field>
+                <mat-form-field>
+                    <input formControlName="terminationDate" matInput [matDatepicker]="picker2" placeholder="Termination date (optional)">
+                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                    <mat-datepicker #picker2></mat-datepicker>
+                </mat-form-field>
+                <div class="button-row">
+                    <button mat-raised-button color="primary" type="submit" [disabled]="!employeeService.form.valid">Submit</button>
+                    <button mat-raised-button color="warn" (click)="onClear()">Clear</button>
+                </div>
+            </div>            
+        </mat-grid-tile>
+    </mat-grid-list>
+</form>

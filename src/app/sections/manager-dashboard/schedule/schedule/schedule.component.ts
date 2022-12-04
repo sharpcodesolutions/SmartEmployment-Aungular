@@ -42,8 +42,8 @@ export class ScheduleComponent implements OnInit {
        this.isUserAuthenticated = res;
     });
 
-    this.employees$ = this.employeeService.employees$;
-    this.total$ = this.employeeService.total$; 
+    // this.employees$ = this.employeeService.employees$;
+    // this.total$ = this.employeeService.total$; 
     this.startDate$.next(this.currentWeekDays()[0]);
     this.endDate$.next(this.currentWeekDays()[6]); 
     this.startDate$.subscribe(date => this.startDate = date); 
