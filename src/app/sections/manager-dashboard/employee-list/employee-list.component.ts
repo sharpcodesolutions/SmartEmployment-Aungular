@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit, QueryList, ViewChild } from '@angular/core';
+import { Component, ComponentFactoryResolver, OnInit, QueryList, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortable } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -12,6 +12,7 @@ import { IEmployee } from '../../models/employee.model';
 import { TimeSpan } from '../../models/timespan';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { EmployeeComponent } from './employee/employee.component';
+import { NotifictionService } from '../services/notifiction.service';
 //import {NgbPaginationModule, NgbAlertModule} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -24,14 +25,14 @@ export class EmployeeListComponent implements OnInit {
 
   employees:IEmployee[]=[];
   listData: MatTableDataSource<any> = new MatTableDataSource<any>();
-  displayedColumns: string[] = ['firstname', 'lastname', 'employeeCode', 'startDate', 'terminationDate', 'birthDate', 'actions'];
+  displayedColumns: string[] = ['firstname', 'lastname', 'employeeCode', 'employeeEmail', 'startDate', 'terminationDate', 'birthDate', 'actions'];
   @ViewChild(MatSort) 
   sort?: MatSort
   @ViewChild(MatPaginator)
   paginator?: MatPaginator;
   searchKey: string = '';
 
-  constructor(private authService:AuthService, public employeeService: EmployeeService, private dialog: MatDialog) {
+  constructor(private authService:AuthService, public employeeService: EmployeeService, private dialog: MatDialog, private notificationService: NotifictionService) {
     // this.employees$ = employeeService.employees$;
     // this.total$ = employeeService.total$; 
   }
@@ -86,5 +87,49 @@ export class EmployeeListComponent implements OnInit {
         // };
       })
     });
+  }
+
+  onEdit(row:IEmployee) {
+    this.employeeService.populateForm(row); 
+    const dialogConfig = new MatDialogConfig(); 
+    dialogConfig.disableClose = true; 
+    dialogConfig.autoFocus = true; 
+    dialogConfig.width = '60%'; 
+    // this.dialog.open(EmployeeComponent, dialogConfig);
+
+    const dialogRef = this.dialog.open(EmployeeComponent, {
+      width: '60%'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {      
+      console.log('The dialog was closed' + result);
+      this.employeeService.GetEmployees().subscribe(employees => {
+        this.listData = new MatTableDataSource(employees);
+        this.listData.sort = this.sort!;
+        this.listData.paginator = this.paginator!;
+        // this.listData.filterPredicate = (data, filter) => {
+        //   return this.displayedColumns.some(ele => {
+        //     return ele != 'actions' && data[ele].toLowerCase().indexOf(filter) != -1; 
+        //   })
+        // };
+      })
+    });
+  }
+
+  onDelete(id:number) {
+    if(confirm('Are you sure to delete this record?')) {
+      this.employeeService.DeleteEmployee(id).subscribe(res => { console.log('employee deleted successfully'); });
+      this.notificationService.warn('! Deleted succesfully'); 
+      this.employeeService.GetEmployees().subscribe(employees => {
+        this.listData = new MatTableDataSource(employees);
+        this.listData.sort = this.sort!;
+        this.listData.paginator = this.paginator!;
+        // this.listData.filterPredicate = (data, filter) => {
+        //   return this.displayedColumns.some(ele => {
+        //     return ele != 'actions' && data[ele].toLowerCase().indexOf(filter) != -1; 
+        //   })
+        // };
+      })
+    }
   }
 }

@@ -30,9 +30,18 @@ export class EmployeeComponent implements OnInit {
 
   onSubmit() {
     console.log('the value is: ' + this.employeeService.form.value.firstname);
-    if(!this.employeeService.form.valid) {
+    if(this.employeeService.form.valid) {
+      if(!this.employeeService.form.get('id')?.value)
+      {
+        this.employeeService.AddEmployee(this.employeeService.form.value).subscribe(employee => console.log('employee created successfully'));
+      }
+      else 
+      {
+        this.employeeService.UpdateEmployee(this.employeeService.form.value).subscribe(employee => console.log('employee updated successfully'));
+      }
+
       console.log('the form is valid');
-      this.employeeService.AddEmployee(this.employeeService.form.value).subscribe(employee => console.log('employee created successfully'));
+      
       this.employeeService.form.reset();
       this.employeeService.initialiseFormGroup();
       this.notificationService.success('Employee created successfully');

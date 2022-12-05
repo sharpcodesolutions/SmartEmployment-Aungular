@@ -20,3 +20,14 @@ snack-bar-container.notification simple-snack-bar {
     font-size: 18px !important;
     font-weight: bold;
 }
+
+.material-icons{
+    font-family: 'Material Icons' !important;
+}
+
+.btn-dialog-close {
+    width: 45px; 
+    min-width: 0px !important; 
+    height: 40px; 
+    padding: 0px !important; 
+}

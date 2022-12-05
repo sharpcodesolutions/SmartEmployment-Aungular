@@ -23,6 +23,10 @@
 			<mat-header-cell *matHeaderCellDef mat-sort-header>Employee code</mat-header-cell>
 			<mat-cell *matCellDef="let element">{{element.employeeCode}}</mat-cell>
 		</ng-container>
+		<ng-container matColumnDef="employeeEmail">
+			<mat-header-cell *matHeaderCellDef mat-sort-header>Employee email</mat-header-cell>
+			<mat-cell *matCellDef="let element">{{element.employeeEmail}}</mat-cell>
+		</ng-container>
 		<ng-container matColumnDef="startDate">
 			<mat-header-cell *matHeaderCellDef mat-sort-header>Start date</mat-header-cell>
 			<mat-cell *matCellDef="let element">{{element.startDate}}</mat-cell>
@@ -38,8 +42,8 @@
 		<ng-container matColumnDef="actions">
 			<mat-header-cell *matHeaderCellDef></mat-header-cell>
 			<mat-cell *matCellDef="let row">
-				<button mat-icon-button><mat-icon>launch</mat-icon></button>
-				<button mat-icon-button color="warn"><mat-icon>delete_outline</mat-icon></button>
+				<button mat-icon-button (click)="onEdit(row)"><mat-icon>launch</mat-icon></button>
+				<button mat-icon-button color="warn" (click)="onDelete(row.id)"><mat-icon>delete_outline</mat-icon></button>
 			</mat-cell>
 		</ng-container>
 		<ng-container matColumnDef="loading">
