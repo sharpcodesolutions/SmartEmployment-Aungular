@@ -10,3 +10,13 @@
 .button-row button {
     margin: 5px;
 }
+
+snack-bar-container.success {
+    background-color: #5cb85c;
+    color: #fff;
+}
+
+snack-bar-container.notification simple-snack-bar {
+    font-size: 18px !important;
+    font-weight: bold;
+}

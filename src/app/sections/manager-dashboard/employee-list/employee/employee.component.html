@@ -1,8 +1,8 @@
-<form [formGroup]="employeeService.form"> 
+<form [formGroup]="employeeService.form" class="normal-form" (submit)="onSubmit()"> 
     <mat-grid-list cols="2" rowHeight="300px">
         <mat-grid-tile>
             <div class="controls-conatiner">
-                <input type="hidden" formControlName="$id">
+                <input type="hidden" formControlName="$key">
                 <mat-form-field>
                     <input formControlName="firstname" matInput placeholder="First name">
                     <mat-error>This field is required.</mat-error>
@@ -36,7 +36,7 @@
                     <mat-datepicker #picker2></mat-datepicker>
                 </mat-form-field>
                 <div class="button-row">
-                    <button mat-raised-button color="primary" type="submit" [disabled]="!employeeService.form.valid">Submit</button>
+                    <button mat-raised-button color="primary" type="submit">Submit</button>
                     <button mat-raised-button color="warn" (click)="onClear()">Clear</button>
                 </div>
             </div>            

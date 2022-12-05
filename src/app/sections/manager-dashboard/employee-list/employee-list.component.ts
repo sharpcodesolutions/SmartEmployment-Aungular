@@ -1,67 +1,90 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, OnInit, QueryList, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort, MatSortable } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { map, noop, Observable, of } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { EmployeeService } from 'src/app/services/employee.service';
 import { NgbdSortableHeader, SortEvent } from 'src/app/shared/utils/sortable.directive';
 import { createHttpObservable } from 'src/app/shared/utils/utils';
 import { IEmployee } from '../../models/employee.model';
+import { TimeSpan } from '../../models/timespan';
+import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
+import { EmployeeComponent } from './employee/employee.component';
 //import {NgbPaginationModule, NgbAlertModule} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-employee-list',
   templateUrl: './employee-list.component.html',
-  styleUrls: ['./employee-list.component.sass']
+  styleUrls: ['./employee-list.component.css']
 })
 export class EmployeeListComponent implements OnInit {
   isUserAuthenticated: boolean = false;
 
-  // employees:IEmployee[]=[];
-  employees$: Observable<IEmployee[]> = of([]);
-	total$: Observable<number> = of(0);
+  employees:IEmployee[]=[];
+  listData: MatTableDataSource<any> = new MatTableDataSource<any>();
+  displayedColumns: string[] = ['firstname', 'lastname', 'employeeCode', 'startDate', 'terminationDate', 'birthDate', 'actions'];
+  @ViewChild(MatSort) 
+  sort?: MatSort
+  @ViewChild(MatPaginator)
+  paginator?: MatPaginator;
+  searchKey: string = '';
 
-  @ViewChildren(NgbdSortableHeader)  
-  headers?: QueryList<NgbdSortableHeader>;
-
-  constructor(private authService:AuthService, public employeeService: EmployeeService) {
+  constructor(private authService:AuthService, public employeeService: EmployeeService, private dialog: MatDialog) {
     // this.employees$ = employeeService.employees$;
     // this.total$ = employeeService.total$; 
   }
 
   ngOnInit(): void {
-    // console.log('from the employee list');
-    // this.isUserAuthenticated = this.authService.isAuthenticated(); 
-    // this.authService.authChanged
-    // .subscribe(res => {
-    //    this.isUserAuthenticated = res;
-  // });
-    
-    // const employees$ = this.http.get<IEmployee[]>('https://localhost:7197/api/Employees/' + 
-    //   this.authService.authUserSub.getValue().username);
-    //createHttpObservable('https://localhost:7197/api/Employees', this.authService.authUserSub.getValue().token);
-
-    // const employees = http$
-    //   .pipe(
-    //     map(res => Object.values(res))
-    //   );
-
-    // employees$.subscribe(
-    //   (employees) => this.employees$ = employees, 
-    //   noop, 
-    //   () => console.log('completed')
-    // );
+    this.employeeService.GetEmployees().subscribe(employees => {
+      this.listData = new MatTableDataSource(employees);
+      this.sort?.sort(({ id: 'firstname', start: 'asc'}) as MatSortable);
+      this.listData.sort = this.sort!;
+      this.listData.paginator = this.paginator!;
+      // this.listData.filterPredicate = (data, filter) => {
+      //   return this.displayedColumns.some(ele => {
+      //     return ele != 'actions' && data[ele].toLowerCase().indexOf(filter) != -1; 
+      //   })
+      // };
+    })
   }
 
-  // onSort({ column, direction }: SortEvent) {
-	// 	// resetting other headers
-	// 	this.headers?.forEach((header) => {
-	// 		if (header.sortable !== column) {
-	// 			header.direction = '';
-	// 		}
-	// 	});
+  onSearchClear() {
+    this.searchKey = '';
+    this.applyFilter(); 
+  }
 
-	// 	this.employeeService.sortColumn = column;
-	// 	this.employeeService.sortDirection = direction;
-	// }
+  applyFilter() {
+    this.listData.filter = this.searchKey.trim().toLowerCase(); 
+  }
 
+  onCreate() {
+    this.employeeService.initialiseFormGroup(); 
+    const dialogConfig = new MatDialogConfig(); 
+    dialogConfig.disableClose = true; 
+    dialogConfig.autoFocus = true; 
+    dialogConfig.width = '60%'; 
+    // this.dialog.open(EmployeeComponent, dialogConfig);
+
+    const dialogRef = this.dialog.open(EmployeeComponent, {
+      width: '60%'
+    });
+
+    console.log('are we hitting this?'); 
+
+    dialogRef.afterClosed().subscribe(result => {      
+      console.log('The dialog was closed' + result);
+      this.employeeService.GetEmployees().subscribe(employees => {
+        this.listData = new MatTableDataSource(employees);
+        this.listData.sort = this.sort!;
+        this.listData.paginator = this.paginator!;
+        // this.listData.filterPredicate = (data, filter) => {
+        //   return this.displayedColumns.some(ele => {
+        //     return ele != 'actions' && data[ele].toLowerCase().indexOf(filter) != -1; 
+        //   })
+        // };
+      })
+    });
+  }
 }

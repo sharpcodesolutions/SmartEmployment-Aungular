@@ -27,21 +27,22 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgbdSortableHeader } from './shared/utils/sortable.directive';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { EmployeeModule } from './sections/manager-dashboard/employee-list/employee.module';
 import { EmployeeComponent } from './sections/manager-dashboard/employee-list/employee/employee.component';
+import { DialogRef } from '@angular/cdk/dialog';
 
 @NgModule({
   declarations: [
     AppComponent,
     ManagerComponent,
     PageNotFoundComponent,
-    EmployeeComponent,
     LogoutComponent,
     LoginComponent,
     EmployeeListComponent, 
     EmployeeCardComponent, UnauthorisedComponent, SideMenuComponent, TopMenuComponent, UnderConstructionComponent, 
-    NgbdSortableHeader
+    NgbdSortableHeader, 
+    EmployeeComponent
   ],
   imports: [
     BrowserModule,
@@ -63,8 +64,13 @@ import { EmployeeComponent } from './sections/manager-dashboard/employee-list/em
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }, 
     EmployeeService, 
-    DecimalPipe
+    DecimalPipe, 
+    {
+      provide: MatDialogRef,
+      useValue: {}
+    },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent], 
+  entryComponents: [EmployeeComponent]
 })
 export class AppModule { }
