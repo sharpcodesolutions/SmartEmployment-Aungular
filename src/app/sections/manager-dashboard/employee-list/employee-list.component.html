@@ -2,7 +2,7 @@
 	<button mat-raised-button (click)="onCreate()">
 		<mat-icon>add</mat-icon>Create
 	</button>
-	<mat-form-field class="search-form-field">
+	<mat-form-field class="search-form-field" appearance="outline">
 		<input matInput [(ngModel)]="searchKey" placeholder="Search" autocomplete="off" (keyup)="applyFilter()">
 		<button mat-button matSuffix aria-label="Clear" *ngIf="searchKey" (click)="onSearchClear()">
 			<mat-icon>close</mat-icon>
@@ -11,6 +11,13 @@
 </div>
 <div class="mat-elevation-z8">
 	<mat-table [dataSource]="listData" matSort>
+		<ng-container matColumnDef="id">
+			<th mat-header-cell *matHeaderCellDef>Photo</th>
+			<td mat-cell *matCellDef="let element">
+				<img class="rounded-circle my-1 mx-1" 
+					width="40" height="40" [src]="'../../../assets/images/' + element.id + '.jpeg'" onError="this.src='../../../assets/images/01.jpg'"/> 
+			</td>
+		  </ng-container>
 		<ng-container matColumnDef="firstname">
 			<mat-header-cell *matHeaderCellDef mat-sort-header>First name</mat-header-cell>
 			<mat-cell *matCellDef="let element">{{element.firstname}}</mat-cell>

@@ -16,6 +16,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { EmployeeComponent } from './employee/employee.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserModule } from '@angular/platform-browser';
 
 @NgModule({
   declarations: [],
@@ -35,7 +37,9 @@ import { EmployeeComponent } from './employee/employee.component';
     MatPaginatorModule,
     MatSortModule, 
     FormsModule, 
-    MatDialogModule
+    MatDialogModule, 
+    BrowserAnimationsModule, 
+    BrowserModule
   ], 
   exports: [
     MatToolbarModule, 
@@ -51,7 +55,7 @@ import { EmployeeComponent } from './employee/employee.component';
     MatIconModule, 
     MatPaginatorModule,
     MatSortModule, 
-    MatDialogModule
+    MatDialogModule, 
   ], 
   providers: [
   ]

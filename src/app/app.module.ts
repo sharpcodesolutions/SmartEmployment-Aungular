@@ -31,6 +31,10 @@ import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { EmployeeModule } from './sections/manager-dashboard/employee-list/employee.module';
 import { EmployeeComponent } from './sections/manager-dashboard/employee-list/employee/employee.component';
 import { DialogRef } from '@angular/cdk/dialog';
+import { MatInputModule } from '@angular/material/input';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
 
 @NgModule({
   declarations: [
@@ -46,6 +50,7 @@ import { DialogRef } from '@angular/cdk/dialog';
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     AuthenticationModule,
     FormsModule,
@@ -57,7 +62,11 @@ import { DialogRef } from '@angular/cdk/dialog';
     NgbModule,
     BrowserAnimationsModule, 
     MatDialogModule, 
-    EmployeeModule
+    EmployeeModule, 
+    MatInputModule, 
+    MatTableModule, 
+    MatPaginatorModule, 
+    MatSortModule
   ],
   providers: [
     ManagerGuardGuard, 

@@ -13,6 +13,7 @@ import { TimeSpan } from '../../models/timespan';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { EmployeeComponent } from './employee/employee.component';
 import { NotifictionService } from '../services/notifiction.service';
+import { Directive, ElementRef, Input } from '@angular/core';
 //import {NgbPaginationModule, NgbAlertModule} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -25,14 +26,14 @@ export class EmployeeListComponent implements OnInit {
 
   employees:IEmployee[]=[];
   listData: MatTableDataSource<any> = new MatTableDataSource<any>();
-  displayedColumns: string[] = ['firstname', 'lastname', 'employeeCode', 'employeeEmail', 'startDate', 'terminationDate', 'birthDate', 'actions'];
+  displayedColumns: string[] = ['id', 'firstname', 'lastname', 'employeeCode', 'employeeEmail', 'startDate', 'terminationDate', 'birthDate', 'actions'];
   @ViewChild(MatSort) 
   sort?: MatSort
   @ViewChild(MatPaginator)
   paginator?: MatPaginator;
   searchKey: string = '';
 
-  constructor(private authService:AuthService, public employeeService: EmployeeService, private dialog: MatDialog, private notificationService: NotifictionService) {
+  constructor(public employeeService: EmployeeService, private dialog: MatDialog, private notificationService: NotifictionService) {
     // this.employees$ = employeeService.employees$;
     // this.total$ = employeeService.total$; 
   }
@@ -131,5 +132,21 @@ export class EmployeeListComponent implements OnInit {
         // };
       })
     }
+  }
+}
+
+@Directive({
+  selector: 'img[default]',
+  host: {
+    '(error)':'updateUrl()',
+    '[src]':'src'
+   }
+})
+export class DefaultImage {
+  @Input() src:string='';
+  @Input() default:string='../../../assets/images/51.jpeg';
+
+  updateUrl() {
+    this.src = this.default;
   }
 }
