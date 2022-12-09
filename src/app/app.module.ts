@@ -20,7 +20,7 @@ import { AuthenticationModule } from './shared/modules/authentication/authentica
 import { SideMenuComponent } from './shared/components/side-menu/side-menu.component';
 import { TopMenuComponent } from './shared/components/top-menu/top-menu.component';
 import { UnderConstructionComponent } from './shared/components/under-construction/under-construction.component';
-import { EmployeeService } from './services/employee.service';
+import { EmployeeService } from './sections/manager-dashboard/services/employee.service';  
 import { AuthService } from './services/auth.service';
 import { DecimalPipe } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';

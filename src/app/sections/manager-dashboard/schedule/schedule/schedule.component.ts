@@ -3,7 +3,7 @@ import { Component, Inject, Input, OnInit } from '@angular/core';
 import { Observable, map, of, BehaviorSubject } from 'rxjs';
 import { IEmployee } from 'src/app/sections/models/employee.model';
 import { AuthService } from 'src/app/services/auth.service';
-import { EmployeeService } from 'src/app/services/employee.service';
+import { EmployeeService } from '../../services/employee.service'; 
 import { ISchedule } from '../schedule.model';
 import { ScheduleService } from '../schedule.service';
 import { faPencil, faTimes, faPlus } from '@fortawesome/free-solid-svg-icons';

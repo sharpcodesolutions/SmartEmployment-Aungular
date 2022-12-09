@@ -55,7 +55,6 @@ export class LoginComponent implements OnInit {
                localStorage.setItem("token", res.token);
                let user:User = {username: userForAuth.email, token: res.token}; 
                localStorage.setItem("user", JSON.stringify(user)); 
-               console.log(tokenDecoder.decodeToken(res.token));
                let roles = JSON.parse(window.atob(res.token.split('.')[1]))["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
 
                console.log('the token is: ' + roles);

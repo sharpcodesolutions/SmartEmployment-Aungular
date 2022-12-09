@@ -1,10 +1,10 @@
 import { Injectable, PipeTransform } from '@angular/core';
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
-import { IEmployee } from '../sections/models/employee.model';
+import { IEmployee } from '../../models/employee.model';
 import { DecimalPipe } from '@angular/common';
 import { debounceTime, delay, switchMap, tap } from 'rxjs/operators';
-import { SortColumn, SortDirection } from '../shared/utils/sortable.directive';
-import { AuthService } from './auth.service';
+import { SortColumn, SortDirection } from 'src/app/shared/utils/sortable.directive';
+import { AuthService } from 'src/app/services/auth.service'; 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
@@ -137,27 +137,27 @@ export class EmployeeService {
 	}
 
 	form: FormGroup = new FormGroup({ 
-		id: new FormControl(null), 
+		id: new FormControl(0), 
 		employeeCode: new FormControl('', Validators.required), 
-		companyCode: new FormControl('', Validators.required),
+		companyCode: new FormControl(''),
 		firstname: new FormControl('', Validators.required),
 		lastname: new FormControl('', Validators.required),
 		employeeEmail: new FormControl('', Validators.email),
-		birthdate: new FormControl('', Validators.required),
-		startdate: new FormControl('', Validators.required),
+		birthDate: new FormControl('', Validators.required),
+		startDate: new FormControl('', Validators.required),
 		terminationDate: new FormControl(null)
 	});	
 
 	initialiseFormGroup() {
 		this.form.setValue({
-			id: null, 
+			id: 0, 
 			employeeCode: '', 
 			companyCode: '',
 			firstname: '',
 			lastname: '',
 			employeeEmail: '',
-			birthdate: '',
-			startdate: '',
+			birthDate: '',
+			startDate: '',
 			terminationDate: null
 		})
 	}
@@ -187,8 +187,8 @@ export class EmployeeService {
 			})
 		};
 		console.log('the user is: ' + this.authService.getCurrUser().username);
-		return this.http.post<IEmployee>('https://localhost:7197/api/Employees/' +
-			this.authService.getCurrUser().username, employeeSM, httpOptions);
+		const url = 'https://localhost:7197/api/Employees/' + this.authService.getCurrUser().username;
+		return this.http.post<IEmployee>(url, employeeSM, httpOptions);
 	}
 
 	populateForm(employee:IEmployee){

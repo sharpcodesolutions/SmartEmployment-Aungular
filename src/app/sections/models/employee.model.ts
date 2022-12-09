@@ -5,7 +5,7 @@ export interface IEmployee {
     firstname:string, 
     lastname:string, 
     employeeEmail:string, 
-    birthdate:Date, 
-    startdate:Date,
+    birthDate:Date, 
+    startDate:Date,
     terminationDate?:Date
 }

@@ -4,7 +4,7 @@
     <button class="btn-dialog-close" mat-stroked-button (click)="onClose()" tabIndex="-1"><mat-icon>clear</mat-icon></button>
 </mat-toolbar>
 <form [formGroup]="employeeService.form" class="normal-form" (submit)="onSubmit()"> 
-    <mat-grid-list cols="3" rowHeight="300px">
+    <mat-grid-list cols="2" rowHeight="300px">
         <mat-grid-tile>
             <div class="controls-conatiner">
                 <input type="hidden" formControlName="id">
@@ -26,12 +26,12 @@
         <mat-grid-tile>
             <div class="controls-container">
                 <mat-form-field>
-                    <input formControlName="birthdate" matInput [matDatepicker]="picker" placeholder="Birthdate">
+                    <input formControlName="birthDate" matInput [matDatepicker]="picker" placeholder="Birthdate">
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>
                 <mat-form-field>
-                    <input formControlName="startdate" matInput [matDatepicker]="picker1" placeholder="Start date">
+                    <input formControlName="startDate" matInput [matDatepicker]="picker1" placeholder="Start date">
                     <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                     <mat-datepicker #picker1></mat-datepicker>
                 </mat-form-field>
@@ -43,19 +43,27 @@
             </div>            
         </mat-grid-tile>
         <mat-grid-tile>
-            <div class="controls-container">
-                <img class="rounded-circle my-1 mx-1" 
-                    width="200" height="200" [src]="'../../../../assets/images/' + employeeService.form.controls['id'].value + '.jpeg'" 
-                    onError="this.src='../../../assets/images/01.jpg'"/>
-                
-                <div class="button-row">
-                    <input type="file" mat-raised-button color="primary" formControlName="id">
+            <div class="controls-container">                  
+                <!-- Shareable short link of  uploaded file -->
+                <div class="container text-center jumbotron"
+                    *ngIf="shortLink">
+                    <h2> Visit Here</h2>
+                    <a href="{{shortLink}}">{{shortLink}}</a>
                 </div>
-                
+                  
+                <!--Flag variable is used here-->
+                <div class="container" *ngIf="loading">
+                    <h3>Loading ...</h3>
+                </div>
+            </div>
+        </mat-grid-tile>
+
+        <mat-grid-tile>
+            <div class="controls-container">
                 <div class="button-row">
                     <button mat-raised-button color="primary" type="submit">Submit</button>
                     <button mat-raised-button color="warn" (click)="onClear()">Clear</button>
-                </div>
+                </div>                
             </div>            
         </mat-grid-tile>
     </mat-grid-list>

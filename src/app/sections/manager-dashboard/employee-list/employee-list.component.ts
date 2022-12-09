@@ -5,7 +5,7 @@ import { MatSort, MatSortable } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { map, noop, Observable, of } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
-import { EmployeeService } from 'src/app/services/employee.service';
+import { EmployeeService } from '../services/employee.service';
 import { NgbdSortableHeader, SortEvent } from 'src/app/shared/utils/sortable.directive';
 import { createHttpObservable } from 'src/app/shared/utils/utils';
 import { IEmployee } from '../../models/employee.model';

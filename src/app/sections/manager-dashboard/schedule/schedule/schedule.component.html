@@ -33,28 +33,28 @@
                 </td>
                 <ng-container *ngIf="schedules$ | async as data">
                 <td *ngFor="let day of currentWeekDays(); index as i " class="fit justify-content-center align-items-center">
-                    <div class="card"  *ngIf="getScheduleForEmployee(employee.id, i); else add">
+                    <div class="card"  *ngIf="getScheduleForEmployee(employee.id!, i); else add">
                         <div class="d-flex">
                             <div class="m-1 pencil" style="cursor: pointer"
-                                (click)="openEditDialog('300ms', '150ms', employee.firstname, getScheduleForEmployee(employee.id, i))">
+                                (click)="openEditDialog('300ms', '150ms', employee.firstname, getScheduleForEmployee(employee.id!, i))">
                                 <fa-icon [icon]="faPencil"></fa-icon>
                             </div>
                             <div class="float-end m-1 delete" style="cursor: pointer" 
-                                (click)="openDialog('300ms', '150ms', employee.firstname, getScheduleForEmployee(employee.id, i))"> <!-- DeleteSchedule(getScheduleForEmployee(employee.id, i).id)"> -->
+                                (click)="openDialog('300ms', '150ms', employee.firstname, getScheduleForEmployee(employee.id!, i))"> <!-- DeleteSchedule(getScheduleForEmployee(employee.id, i).id)"> -->
                                 <fa-icon [icon]="faTimes"></fa-icon>
                             </div>
                         </div>                        
                         <div class="card-header">
-                            <b>{{ datePipe.transform(getScheduleForEmployee(employee.id, i).startTime, 'shortTime') + ' - ' + 
-                                datePipe.transform(getScheduleForEmployee(employee.id, i).endTime, 'shortTime') }}</b>
-                            <p>{{ getScheduleForEmployee(employee.id, i).comments }}</p> 
+                            <b>{{ datePipe.transform(getScheduleForEmployee(employee.id!, i).startTime, 'shortTime') + ' - ' + 
+                                datePipe.transform(getScheduleForEmployee(employee.id!, i).endTime, 'shortTime') }}</b>
+                            <p>{{ getScheduleForEmployee(employee.id!, i).comments }}</p> 
                         </div>
                     </div>
                     <ng-template #add>
                         <div class="card border-0 bg-transparent my-3">
                             <div class="card-body d-flex justify-content-center align-items-center">
                                 <div class="m-1 plus" style="cursor: pointer"
-                                    (click)="openAddDialog('300ms', '150ms', employee.id, employee.firstname, i, day)">
+                                    (click)="openAddDialog('300ms', '150ms', employee.id!, employee.firstname, i, day)">
                                     <fa-icon [icon]="faPlus"></fa-icon>
                                 </div>
                                 <i class="fa fa-plus" aria-hidden="true"></i>

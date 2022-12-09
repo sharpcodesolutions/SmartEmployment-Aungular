@@ -14,7 +14,7 @@ import { EnvironmentUrlService } from './environment-url.service';
    providedIn: 'root'
 })
 export class AuthService {
-   private authChangeSub = new Subject<boolean>(); 
+   private authChangeSub = new BehaviorSubject<boolean>(false); 
    public authChanged = this.authChangeSub.asObservable(); 
 
    private authUserSub = new Subject<User>(); 
