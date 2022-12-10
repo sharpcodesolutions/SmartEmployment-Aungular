@@ -1,20 +1,34 @@
-<h1 mat-dialog-title>Add schedule for {{data.employeeName}}</h1>
-<div mat-dialog-content>
-  <p>Update time</p>
-  <mat-form-field appearance="fill">
-    <mat-label>Start time</mat-label>
-    <input matInput [(ngModel)]="data.startTime">
-  </mat-form-field>
-  <mat-form-field appearance="fill">
-    <mat-label>End time</mat-label>
-    <input matInput [(ngModel)]="data.endTime">
-  </mat-form-field>
-  <mat-form-field appearance="fill">
-    <mat-label>Edit comment</mat-label>
-    <input matInput [(ngModel)]="data.schedule.comments">
-  </mat-form-field>
-</div>
-<div mat-dialog-actions>
-  <button mat-button (click)="onClose()">Cancel</button>
-  <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Ok</button>
-</div>
+<mat-toolbar>
+  <span>{{scheduleService.form.controls['id'].value?"Modify Schedule":"New Schedule"}}</span>
+  <span class="fill-remaining-space"></span>
+  <button class="btn-dialog-close" mat-stroked-button (click)="onClose()" tabIndex="-1"><mat-icon>clear</mat-icon></button>
+</mat-toolbar>
+<form [formGroup]="scheduleService.form" class="normal-form" (submit)="onSubmit()"> 
+  <div mat-dialog-content>
+    <p>Update time</p>
+    <mat-form-field appearance="fill">
+      <mat-label>Start time</mat-label>
+      <input formControlName="startTime" matInput [ngxTimepicker]="picker"
+        [value]="scheduleService.form.controls['startTime'].value">
+      <ngx-material-timepicker #picker></ngx-material-timepicker>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>End time</mat-label>
+      <input formControlName="endTime" matInput [ngxTimepicker]="picker1"
+        [value]="scheduleService.form.controls['endTime'].value">
+      <ngx-material-timepicker #picker1></ngx-material-timepicker>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Comment</mat-label>
+      <input formControlName="comments" matInput>
+    </mat-form-field>
+    <mat-grid-tile>
+      <div class="controls-container">
+          <div class="button-row">
+              <button mat-raised-button color="primary" type="submit">Submit</button>
+              <button mat-raised-button color="warn" (click)="onClear()">Clear</button>
+          </div>                
+      </div>            
+    </mat-grid-tile>
+  </div>
+</form>

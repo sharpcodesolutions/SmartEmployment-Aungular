@@ -35,6 +35,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
+import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
 
 @NgModule({
   declarations: [
@@ -66,7 +67,8 @@ import { MatSortModule } from '@angular/material/sort';
     MatInputModule, 
     MatTableModule, 
     MatPaginatorModule, 
-    MatSortModule
+    MatSortModule, 
+
   ],
   providers: [
     ManagerGuardGuard, 

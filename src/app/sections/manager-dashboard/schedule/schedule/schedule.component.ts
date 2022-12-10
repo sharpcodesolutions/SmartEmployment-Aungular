@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
 import { Observable, map, of, BehaviorSubject } from 'rxjs';
 import { IEmployee } from 'src/app/sections/models/employee.model';
 import { AuthService } from 'src/app/services/auth.service';
@@ -7,7 +7,9 @@ import { EmployeeService } from '../../services/employee.service';
 import { ISchedule } from '../schedule.model';
 import { ScheduleService } from '../schedule.service';
 import { faPencil, faTimes, faPlus } from '@fortawesome/free-solid-svg-icons';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { NotifictionService } from '../../services/notifiction.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-schedule',
@@ -158,55 +160,35 @@ export class ScheduleComponent implements OnInit {
   }
 
   openEditDialog(enterAnimationDuration: string, exitAnimationDuration: string, employeeName: string, schedule: ISchedule): void {
-    const dialogRef = this.dialog.open(DialogAnimationsEdit, {
+    this.scheduleService.populateForm(schedule); 
+
+    const dialogRef = this.dialog.open(DialogAnimationsAddEdit, {
       width: '300px',
-      data: {employeeName: employeeName, schedule: schedule, startTime: schedule.startTime.toString(), endTime: schedule.endTime.toString()},
       enterAnimationDuration,
       exitAnimationDuration,
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      // console.log('ok or no? ' + ' ' + result.isOk);
-      if(result)
-      {
-        console.log('The eidt dialog was closed' + result.startTime + ' ' + result.endTime);
-        result.schedule.startTime = new Date(result.startTime); 
-        result.schedule.endTime = new Date(result.endTime); 
-        this.UpdateSchedule(result.schedule);
-      }
-      else 
-      {
-        this.scheduleService.GetSchedules(this.startDate, this.endDate).subscribe(schedules =>{
-          this.schedules = schedules;
-        });
-      }
+      this.scheduleService.GetSchedules(this.startDate, this.endDate).subscribe(schedules => {
+        this.schedules = schedules; 
+      });
     });
   }
 
   openAddDialog(enterAnimationDuration: string, exitAnimationDuration: string, employeeId: number, employeeName: string, dayIndex: number, date: Date): void {
-    let newSchedule: ISchedule = {id: 0, employeeId: employeeId, date: date, dayIndex: dayIndex, 
-      startTime: new Date(), endTime: new Date(), hours: 0, comments: '', taskId: 0};
-    const dialogRef = this.dialog.open(DialogAnimationsEdit, {
+    this.scheduleService.initialiseFormGroup(date, dayIndex, employeeId); 
+
+    const dialogRef = this.dialog.open(DialogAnimationsAddEdit, {
       width: '300px',
-      data: {employeeId: employeeId, employeeName: employeeName, schedule: newSchedule, startTime: newSchedule.startTime.toString(), endTime: newSchedule.endTime.toString()},
+      disableClose: true, 
       enterAnimationDuration,
-      exitAnimationDuration,
+      exitAnimationDuration
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if(result)
-      {
-        console.log('The add dialog was closed ' + result.startTime + ' ' + result.endTime);
-        result.schedule.startTime = new Date(result.startTime); 
-        result.schedule.endTime = new Date(result.endTime); 
-        this.AddSchedule(result.schedule);
-      }
-      else 
-      {
-        this.scheduleService.GetSchedules(this.startDate, this.endDate).subscribe(schedules =>{
-          this.schedules = schedules;
-        });
-      }
+      this.scheduleService.GetSchedules(this.startDate, this.endDate).subscribe(schedules => {
+        this.schedules = schedules; 
+      });
     });
   }
 }
@@ -214,14 +196,6 @@ export class ScheduleComponent implements OnInit {
 export interface IDialogData {
   employeeName: string;
   schedule: ISchedule;
-}
-
-export interface IDialogEditData {
-  employeeName: string;
-  schedule: ISchedule;
-  startTime: string; 
-  endTime: string;
-  isOk: boolean;
 }
 
 @Component({
@@ -246,40 +220,14 @@ export class DialogAnimationsExampleDialog {
 }
 
 @Component({
-  selector: 'dialog-animations-eidt',
-  templateUrl: './dialog-animations-edit.html',
-})
-export class DialogAnimationsEdit implements OnInit {
-
-  constructor(public dialogRef: MatDialogRef<DialogAnimationsEdit>, @Inject(MAT_DIALOG_DATA) public data: IDialogEditData) {
-    dialogRef.disableClose = true;
-  }
-
-  ngOnInit(): void {
-    // this.data.startTime = this.data.schedule.startTime.toString(); 
-    // this.data.endTime = this.data.schedule.endTime.toString(); 
-  }
-
-  onClose() {
-    console.log('close clicked');
-    this.data.isOk = false; 
-    this.dialogRef.close();
-  }
-
-  onOk() {
-    console.log('ok clicked');
-    this.data.isOk = true; 
-    this.dialogRef.close();
-  }
-}
-
-@Component({
   selector: 'dialog-animations-add',
   templateUrl: './dialog-animations-add.html',
+  styleUrls: ['./schedule.component.css']
 })
-export class DialogAnimationsAdd implements OnInit {
+export class DialogAnimationsAddEdit implements OnInit {
 
-  constructor(public dialogRef: MatDialogRef<DialogAnimationsAdd>, @Inject(MAT_DIALOG_DATA) public data: IDialogEditData) {
+  constructor(private notificationService:NotifictionService, public scheduleService:ScheduleService, 
+    public dialogRef: MatDialogRef<DialogAnimationsAddEdit>) {
     dialogRef.disableClose = true;
   }
 
@@ -288,15 +236,41 @@ export class DialogAnimationsAdd implements OnInit {
     // this.data.endTime = this.data.schedule.endTime.toString(); 
   }
 
-  onClose() {
-    console.log('close clicked');
-    this.data.isOk = false; 
-    this.dialogRef.close();
+  onSubmit() {
+    console.log('the value is: ' + this.scheduleService.form.value.startTime);
+    if(this.scheduleService.form.valid) {
+      if(this.scheduleService.form.get('id')?.value === 0)
+      {
+        const schedule:ISchedule = this.scheduleService.form.value;   
+        schedule.startTime = moment.utc(schedule.startTime, ["h:mm A"]).toDate();
+        schedule.endTime = moment.utc(schedule.endTime, ["h:mm A"]).toDate();
+        this.scheduleService.AddSchedule(schedule).subscribe(s => console.log('schedule created successfully'));
+      }
+      else 
+      {
+        const schedule:ISchedule = this.scheduleService.form.value;
+        schedule.startTime = moment.utc(schedule.startTime, ["h:mm A"]).toDate(); 
+        schedule.endTime = moment.utc(schedule.endTime, ["h:mm A"]).toDate();
+        this.scheduleService.UpdateSchedule(schedule).subscribe(s => console.log('schedule updated successfully'));
+      }
+
+      console.log('the form is valid');
+      
+      this.scheduleService.form.reset();
+      // this.scheduleService.initialiseFormGroup();
+      this.notificationService.success('Schedule created successfully');
+      this.onClose(); 
+    }
   }
 
-  onOk() {
-    console.log('ok clicked');
-    this.data.isOk = true; 
-    this.dialogRef.close();
+  onClear() {
+    this.scheduleService.form.reset(); 
+    // this.scheduleService.initialiseFormGroup(); 
+  }
+
+  onClose() {
+    this.scheduleService.form.reset(); 
+    // this.scheduleService.initialiseFormGroup(); 
+    this.dialogRef.close(); 
   }
 }

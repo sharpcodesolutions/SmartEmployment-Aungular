@@ -70,7 +70,8 @@ export class EmployeeListComponent implements OnInit {
     // this.dialog.open(EmployeeComponent, dialogConfig);
 
     const dialogRef = this.dialog.open(EmployeeComponent, {
-      width: '60%'
+      width: '60%',
+      disableClose: true
     });
 
     console.log('are we hitting this?'); 
@@ -99,7 +100,8 @@ export class EmployeeListComponent implements OnInit {
     // this.dialog.open(EmployeeComponent, dialogConfig);
 
     const dialogRef = this.dialog.open(EmployeeComponent, {
-      width: '60%'
+      width: '60%', 
+      disableClose: true
     });
 
     dialogRef.afterClosed().subscribe(result => {      

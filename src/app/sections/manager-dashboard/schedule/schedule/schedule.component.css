@@ -27,8 +27,8 @@
  }
 
  table .plus {
-    color: green;
-    text-align: center;
+  color: green;
+  text-align: center;
   }
 
   table .plus :hover {
@@ -53,3 +53,36 @@
     color: lightskyblue;
   }
 
+  .controls-conatiner {
+    width: 100%;
+    padding: 5%; 
+}
+
+.controls-conatiner > * {
+    width: 100%;
+}
+
+.button-row button {
+    margin: 5px;
+}
+
+snack-bar-container.success {
+    background-color: #5cb85c;
+    color: #fff;
+}
+
+snack-bar-container.notification simple-snack-bar {
+    font-size: 18px !important;
+    font-weight: bold;
+}
+
+.material-icons{
+    font-family: 'Material Icons' !important;
+}
+
+.btn-dialog-close {
+    width: 45px; 
+    min-width: 0px !important; 
+    height: 40px; 
+    padding: 0px !important; 
+}

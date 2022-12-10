@@ -6,8 +6,8 @@ export interface ISchedule {
     dayIndex:number,
     startTime:Date,
     endTime:Date, 
-    hours:number, 
-    comments:string, 
+    hours?:number, 
+    comments?:string, 
     employeeId:number, 
-    taskId:number
+    taskId?:number
 }
