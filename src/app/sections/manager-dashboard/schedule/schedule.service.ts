@@ -59,8 +59,7 @@ export class ScheduleService {
 			  'Content-Type':  'application/json',
 			})
 		};
-		return this.http.put<number>('https://localhost:7197/api/Employees/Schedules/' + schedule.id + '/' 
-			+ this.datePipe.transform(schedule.startTime, 'shortTime') + '/' + this.datePipe.transform(schedule.endTime, 'shortTime'), schedule, httpOptions);
+		return this.http.put<number>('https://localhost:7197/api/Employees/Schedules', schedule, httpOptions);
 	}
 
 	AddSchedule(schedule: ISchedule): Observable<ISchedule> {

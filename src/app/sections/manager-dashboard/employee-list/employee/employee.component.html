@@ -9,34 +9,41 @@
             <div class="controls-conatiner">
                 <input type="hidden" formControlName="id">
                 <mat-form-field>
-                    <input formControlName="firstname" matInput placeholder="First name">
+                    <mat-label>First name</mat-label>
+                    <input formControlName="firstname" matInput>
                     <mat-error>This field is required.</mat-error>
                 </mat-form-field>
                 <mat-form-field>
-                    <input formControlName="lastname" matInput placeholder="Last name">
+                    <mat-label>Last name</mat-label>
+                    <input formControlName="lastname" matInput>
                 </mat-form-field>
                 <mat-form-field>
-                    <input formControlName="employeeCode" matInput placeholder="Employee code">
+                    <mat-label>Employee code</mat-label>
+                    <input formControlName="employeeCode" matInput>
                 </mat-form-field>
                 <mat-form-field>
-                    <input formControlName="employeeEmail" matInput placeholder="Employee email">
+                    <mat-label>Employee email</mat-label>
+                    <input formControlName="employeeEmail" matInput>
                 </mat-form-field>
             </div>
         </mat-grid-tile>
         <mat-grid-tile>
             <div class="controls-container">
                 <mat-form-field>
-                    <input formControlName="birthDate" matInput [matDatepicker]="picker" placeholder="Birthdate">
+                    <mat-label>Date of birth</mat-label>
+                    <input formControlName="birthDate" matInput [matDatepicker]="picker">
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>
                 <mat-form-field>
-                    <input formControlName="startDate" matInput [matDatepicker]="picker1" placeholder="Start date">
+                    <mat-label>Start date</mat-label>
+                    <input formControlName="startDate" matInput [matDatepicker]="picker1">
                     <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                     <mat-datepicker #picker1></mat-datepicker>
                 </mat-form-field>
                 <mat-form-field>
-                    <input formControlName="terminationDate" matInput [matDatepicker]="picker2" placeholder="Termination date (optional)">
+                    <mat-label>Termination date</mat-label>
+                    <input formControlName="terminationDate" matInput [matDatepicker]="picker2">
                     <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                     <mat-datepicker #picker2></mat-datepicker>
                 </mat-form-field>

@@ -14,6 +14,7 @@ import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dial
 import { EmployeeComponent } from './employee/employee.component';
 import { NotifictionService } from '../services/notifiction.service';
 import { Directive, ElementRef, Input } from '@angular/core';
+import {ViewEncapsulation} from '@angular/core';
 //import {NgbPaginationModule, NgbAlertModule} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
