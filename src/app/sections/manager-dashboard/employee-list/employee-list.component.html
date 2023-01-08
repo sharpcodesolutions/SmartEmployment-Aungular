@@ -1,68 +1,72 @@
-<div>
-	<p>This is a more complete example with a service that simulates server calling:</p>
-
-	<ul>
-		<li>an observable async service to fetch a list of countries</li>
-		<li>sorting, filtering and pagination</li>
-		<li>simulated delay and loading indicator</li>
-		<li>debouncing of search requests</li>
-	</ul>
-
-	<form>
-		<div class="mb-3 row">
-			<label for="table-complete-search" class="col-xs-3 col-sm-auto col-form-label">Full text search:</label>
-			<div class="col-xs-3 col-sm-auto">
-				<input
-					id="table-complete-search"
-					type="text"
-					class="form-control"
-					name="searchTerm"
-					[(ngModel)]="employeeService.searchTerm"
-				/>
-			</div>
-			<span class="col col-form-label" *ngIf="employeeService.loading$ | async">Loading...</span>
-		</div>
-
-		<table class="table table-striped">
-			<thead>
-				<tr>
-					<th scope="col">Id</th>
-					<th scope="col" sortable="firstname" (sort)="onSort($event)">First name</th>
-					<th scope="col" sortable="lastname" (sort)="onSort($event)">Last name</th>
-					<th scope="col" sortable="employeeCode" (sort)="onSort($event)">Employee code</th>
-					<th scope="col" sortable="companyCode" (sort)="onSort($event)">Company code code</th>
-					<th scope="col" sortable="employeeEmail" (sort)="onSort($event)">Employee email</th>
-					<th scope="col" sortable="birthdate" (sort)="onSort($event)">Date of birth</th>
-					<th scope="col" sortable="startdate" (sort)="onSort($event)">Start date</th>
-					<th scope="col" sortable="terminationDate" (sort)="onSort($event)">Termination date</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr *ngFor="let employee of employees$ | async">
-					<th scope="row">{{ employee.id }}</th>
-					<td>
-						<ngb-highlight [result]="employee.firstname" [term]="employeeService.searchTerm"></ngb-highlight>
-					</td>
-					<td><ngb-highlight [result]="employee.lastname" [term]="employeeService.searchTerm"></ngb-highlight></td>
-					<td><ngb-highlight [result]="employee.employeeCode" [term]="employeeService.searchTerm"></ngb-highlight></td>
-					<td><ngb-highlight [result]="employee.companyCode" [term]="employeeService.searchTerm"></ngb-highlight></td>
-					<td><ngb-highlight [result]="employee.employeeEmail" [term]="employeeService.searchTerm"></ngb-highlight></td>
-					<td>{{ employee.birthdate | date:'dd-MM-yyyy' }}</td>
-					<td>{{ employee.startdate | date:'dd-MM-yyyy' }}</td>
-					<td>{{ employee.terminationDate | date:'dd-MM-yyyy' }}</td>
-				</tr>
-			</tbody>
-		</table>
-
-		<div class="d-flex justify-content-between p-2">
-			<ngb-pagination [collectionSize]="(total$ | async)!" [(page)]="employeeService.page" [pageSize]="employeeService.pageSize">
-			</ngb-pagination>
-
-			<select class="form-select" style="width: auto" name="pageSize" [(ngModel)]="employeeService.pageSize">
-				<option [ngValue]="2">2 items per page</option>
-				<option [ngValue]="4">4 items per page</option>
-				<option [ngValue]="6">6 items per page</option>
-			</select>
-		</div>
-	</form>
+<div class="search-div">
+	<button mat-raised-button (click)="onCreate()">
+		<mat-icon>add</mat-icon>Create
+	</button>
+	<mat-form-field class="search-form-field" appearance="outline">
+		<input matInput [(ngModel)]="searchKey" placeholder="Search" autocomplete="off" (keyup)="applyFilter()">
+		<button mat-button matSuffix aria-label="Clear" *ngIf="searchKey" (click)="onSearchClear()">
+			<mat-icon>close</mat-icon>
+		</button>
+	</mat-form-field>
+</div>
+<div class="mat-elevation-z8" style="width: 100%;overflow-x: auto;">
+	<mat-table [dataSource]="listData" matSort>
+		<ng-container matColumnDef="id">
+			<th mat-header-cell *matHeaderCellDef>Photo</th>
+			<td mat-cell *matCellDef="let element">
+				<img *ngIf="element.id" class="rounded-circle my-1 mx-1" 
+					width="40" height="40" [src]="'../../../assets/images/' + element.id + '.jpeg'" onError="this.src='../../../assets/images/01.jpg'"/> 
+			</td>
+		  </ng-container>
+		<ng-container matColumnDef="firstname">
+			<mat-header-cell *matHeaderCellDef mat-sort-header>First name</mat-header-cell>
+			<mat-cell *matCellDef="let element">{{element.firstname}}</mat-cell>
+		</ng-container>
+		<ng-container matColumnDef="lastname">
+			<mat-header-cell *matHeaderCellDef mat-sort-header>Last name</mat-header-cell>
+			<mat-cell *matCellDef="let element">{{element.lastname}}</mat-cell>
+		</ng-container>
+		<ng-container matColumnDef="employeeCode">
+			<mat-header-cell *matHeaderCellDef mat-sort-header>Employee code</mat-header-cell>
+			<mat-cell *matCellDef="let element">{{element.employeeCode}}</mat-cell>
+		</ng-container>
+		<ng-container matColumnDef="employeeEmail">
+			<mat-header-cell *matHeaderCellDef mat-sort-header>Employee email</mat-header-cell>
+			<mat-cell *matCellDef="let element">{{element.employeeEmail}}</mat-cell>
+		</ng-container>
+		<ng-container matColumnDef="startDate">
+			<mat-header-cell *matHeaderCellDef mat-sort-header>Start date</mat-header-cell>
+			<mat-cell *matCellDef="let element">{{element.startDate | date:'shortDate'}}</mat-cell>
+		</ng-container>
+		<ng-container matColumnDef="terminationDate">
+			<mat-header-cell *matHeaderCellDef mat-sort-header>Termination date</mat-header-cell>
+			<mat-cell *matCellDef="let element">{{element.terminationDate  | date:'shortDate'}}</mat-cell>
+		</ng-container>
+		<ng-container matColumnDef="birthDate">
+			<mat-header-cell *matHeaderCellDef mat-sort-header>Date of birth</mat-header-cell>
+			<mat-cell *matCellDef="let element">{{element.birthDate | date:'shortDate'}}</mat-cell>
+		</ng-container>
+		<ng-container matColumnDef="actions">
+			<mat-header-cell *matHeaderCellDef></mat-header-cell>
+			<mat-cell *matCellDef="let row">
+				<button mat-icon-button (click)="onEdit(row)"><mat-icon>launch</mat-icon></button>
+				<button mat-icon-button color="warn" (click)="onDelete(row.id)"><mat-icon>delete_outline</mat-icon></button>
+			</mat-cell>
+		</ng-container>
+		<ng-container matColumnDef="loading">
+			<mat-footer-cell *matFooterCellDef colspan="6">
+				Loading data...
+			</mat-footer-cell>
+		</ng-container>
+		<ng-container matColumnDef="noData">
+			<mat-footer-cell *matFooterCellDef colspan="6">
+				No data.
+			</mat-footer-cell>
+		</ng-container>
+		<mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+		<mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+		<mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide':listData!=null}"></mat-footer-row>
+		<mat-footer-row *matFooterRowDef="['noData']" [ngClass]="{'hide':!(listData!=null && listData.data.length==0)}"></mat-footer-row>
+	</mat-table>
+	<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="5" showFirstLastButtons></mat-paginator>
 </div>

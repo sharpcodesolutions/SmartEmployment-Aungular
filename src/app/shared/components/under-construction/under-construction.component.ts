@@ -10,6 +10,7 @@ export class UnderConstructionComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    console.log('from under construction');
   }
 
 }

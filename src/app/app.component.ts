@@ -11,17 +11,13 @@ export class AppComponent {
   isUserAuthenticated: boolean = false;
   authUser: User = {}; 
 
-  constructor(private authService: AuthService) {}
+  constructor(private _authService: AuthService) {}
 
   ngOnInit() {
-     this.isUserAuthenticated = this.authService.isAuthenticated(); 
-     this.authService.authChanged
-     .subscribe(res => {
-        this.isUserAuthenticated = res;
-     });
-     this.authService.authUserChanged
-     .subscribe(res => {
-        this.authUser = res;
-     });
+   console.log('authChanged from app: ' + this._authService.authChanged);
+  }
+
+  get authService() : AuthService {
+   return this._authService; 
   }
 }

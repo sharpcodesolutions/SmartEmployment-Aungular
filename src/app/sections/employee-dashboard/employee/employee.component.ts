@@ -10,6 +10,7 @@ export class EmployeeComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    console.log('from the employee dashboard');
   }
 
 }

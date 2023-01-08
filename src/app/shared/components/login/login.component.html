@@ -1,38 +1,36 @@
-<div class="row justify-content-center p-5">
-<div class="card">
-   <div class="card-body">
-       <h1 class="card-title">Login</h1>
- 
-       <div *ngIf="showError" class="alert alert-danger" role="alert">
-           {{errorMessage}}
-       </div>
-       
-       <form [formGroup]="loginForm" autocomplete="on" novalidate (ngSubmit)="loginUser(loginForm.value)">
-           <div class="mb-3 row">
-               <label for="username" class="col-form-label col-sm-2">Username:</label>
-               <div class="col-md-4">
-                   <input type="text" id="username" formControlName="username" class="form-control" />
-               </div>
-               <div class="col-md-4">
-                   <em *ngIf="validateControl('username') && hasError('username', 'required')">Username is required</em>
-               </div>
-           </div>
-           <div class="mb-3 row">
-               <label for="password" class="col-form-label col-sm-2">Password:</label>
-               <div class="col-md-4">
-                   <input type="password" id="password" formControlName="password" class="form-control" />
-               </div>
-               <div class="col-md-4">
-                   <em *ngIf="validateControl('password') && hasError('password', 'required')">Password is required</em>
-               </div>
-           </div>
-           <br>
-           <div class="mb-3 row">
-               <div class="col-md-1">
-                   <button type="submit" class="btn btn-info" [disabled]="!loginForm.valid">Login</button>
-               </div>
-           </div>
-       </form>
-   </div>
- </div>
+<div class="row justify-content-center p-5 bg-light">
+    <div class="card w-100" style="max-width: 500px">
+        <div class="card-body">
+            <h1 class="card-title">Login</h1>
+        
+            <div *ngIf="showError" class="alert alert-danger" role="alert">
+                {{errorMessage}}
+            </div>
+            
+            <form [formGroup]="loginForm" autocomplete="on" novalidate (ngSubmit)="loginUser(loginForm.value)">
+                <div class="mb-3 row">
+                    <div class="">
+                        <input type="text" id="username" formControlName="username" class="form-control" placeholder="Username" />
+                    </div>
+                    <div class="">
+                        <em *ngIf="validateControl('username') && hasError('username', 'required')">Username is required</em>
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <div class="">
+                        <input type="password" id="password" formControlName="password" class="form-control" placeholder="Password" />
+                    </div>
+                    <div class="">
+                        <em *ngIf="validateControl('password') && hasError('password', 'required')">Password is required</em>
+                    </div>
+                </div>
+                <br>
+                <div class="mb-3 row">
+                    <div class="col-md-1">
+                        <button type="submit" class="btn btn-info" [disabled]="!loginForm.valid">Login</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
  </div>

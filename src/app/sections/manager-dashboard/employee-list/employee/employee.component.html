@@ -1,0 +1,77 @@
+<mat-toolbar>
+    <span>{{employeeService.form.controls['id'].value?"Modify Employee":"New Employee"}}</span>
+    <span class="fill-remaining-space"></span>
+    <button class="btn-dialog-close" mat-stroked-button (click)="onClose()" tabIndex="-1"><mat-icon>clear</mat-icon></button>
+</mat-toolbar>
+<form [formGroup]="employeeService.form" class="normal-form" (submit)="onSubmit()"> 
+    <mat-grid-list cols="2" rowHeight="300px">
+        <mat-grid-tile>
+            <div class="controls-conatiner">
+                <input type="hidden" formControlName="id">
+                <mat-form-field>
+                    <mat-label>First name</mat-label>
+                    <input formControlName="firstname" matInput>
+                    <mat-error>This field is required.</mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Last name</mat-label>
+                    <input formControlName="lastname" matInput>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Employee code</mat-label>
+                    <input formControlName="employeeCode" matInput>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Employee email</mat-label>
+                    <input formControlName="employeeEmail" matInput>
+                </mat-form-field>
+            </div>
+        </mat-grid-tile>
+        <mat-grid-tile>
+            <div class="controls-container">
+                <mat-form-field>
+                    <mat-label>Date of birth</mat-label>
+                    <input formControlName="birthDate" matInput [matDatepicker]="picker">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Start date</mat-label>
+                    <input formControlName="startDate" matInput [matDatepicker]="picker1">
+                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Termination date</mat-label>
+                    <input formControlName="terminationDate" matInput [matDatepicker]="picker2">
+                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                    <mat-datepicker #picker2></mat-datepicker>
+                </mat-form-field>
+            </div>            
+        </mat-grid-tile>
+        <mat-grid-tile>
+            <div class="controls-container">                  
+                <!-- Shareable short link of  uploaded file -->
+                <div class="container text-center jumbotron"
+                    *ngIf="shortLink">
+                    <h2> Visit Here</h2>
+                    <a href="{{shortLink}}">{{shortLink}}</a>
+                </div>
+                  
+                <!--Flag variable is used here-->
+                <div class="container" *ngIf="loading">
+                    <h3>Loading ...</h3>
+                </div>
+            </div>
+        </mat-grid-tile>
+
+        <mat-grid-tile>
+            <div class="controls-container">
+                <div class="button-row">
+                    <button mat-raised-button color="primary" type="submit">Submit</button>
+                    <button mat-raised-button color="warn" (click)="onClear()">Clear</button>
+                </div>                
+            </div>            
+        </mat-grid-tile>
+    </mat-grid-list>
+</form>

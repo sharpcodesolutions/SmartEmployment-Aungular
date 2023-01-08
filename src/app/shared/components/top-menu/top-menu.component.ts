@@ -15,6 +15,7 @@ export class TopMenuComponent implements OnInit {
 
   ngOnInit(): void {
     this.isUserAuthenticated = this.authService.isAuthenticated(); 
+    this.authUser = this.authService.getCurrUser(); 
     this.authService.authChanged
     .subscribe(res => {
        this.isUserAuthenticated = res;
@@ -23,7 +24,10 @@ export class TopMenuComponent implements OnInit {
     .subscribe(res => {
        this.authUser = res;
     });
-    console.log('is auth at menue: ' + this.isUserAuthenticated);
+    console.log('from the top menu, is auth is: ' + this.isUserAuthenticated);
+    console.log('from the top menu, token is: ' + localStorage["token"]);
+    console.log('from the top menu, user is: ' + localStorage["user"]);
+    console.log('from top menu, user is: ' + this.authUser); 
   }
 
 }

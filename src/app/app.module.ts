@@ -5,7 +5,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ManagerComponent } from './sections/manager-dashboard/manager/manager.component';
 import { PageNotFoundComponent } from './shared/components/page-not-found/page-not-found.component';
-import { EmployeeComponent } from './sections/employee-dashboard/employee/employee.component';
 import { LogoutComponent } from './shared/components/logout/logout.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EmployeeListComponent } from './sections/manager-dashboard/employee-list/employee-list.component';
@@ -21,26 +20,38 @@ import { AuthenticationModule } from './shared/modules/authentication/authentica
 import { SideMenuComponent } from './shared/components/side-menu/side-menu.component';
 import { TopMenuComponent } from './shared/components/top-menu/top-menu.component';
 import { UnderConstructionComponent } from './shared/components/under-construction/under-construction.component';
-import { EmployeeService } from './services/employee.service';
+import { EmployeeService } from './sections/manager-dashboard/services/employee.service';  
 import { AuthService } from './services/auth.service';
 import { DecimalPipe } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgbdSortableHeader } from './shared/utils/sortable.directive';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { EmployeeModule } from './sections/manager-dashboard/employee-list/employee.module';
+import { EmployeeComponent } from './sections/manager-dashboard/employee-list/employee/employee.component';
+import { DialogRef } from '@angular/cdk/dialog';
+import { MatInputModule } from '@angular/material/input';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
 
 @NgModule({
   declarations: [
     AppComponent,
     ManagerComponent,
     PageNotFoundComponent,
-    EmployeeComponent,
     LogoutComponent,
     LoginComponent,
     EmployeeListComponent, 
     EmployeeCardComponent, UnauthorisedComponent, SideMenuComponent, TopMenuComponent, UnderConstructionComponent, 
-    NgbdSortableHeader
+    NgbdSortableHeader, 
+    EmployeeComponent
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     AuthenticationModule,
     FormsModule,
@@ -49,15 +60,28 @@ import { NgbdSortableHeader } from './shared/utils/sortable.directive';
     RouterModule.forRoot([
       { path: 'authentication', loadChildren: () => import('./shared/modules/authentication/authentication.module').then(m => m.AuthenticationModule) }
     ]),
-    NgbModule
+    NgbModule,
+    BrowserAnimationsModule, 
+    MatDialogModule, 
+    EmployeeModule, 
+    MatInputModule, 
+    MatTableModule, 
+    MatPaginatorModule, 
+    MatSortModule, 
+
   ],
   providers: [
     ManagerGuardGuard, 
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }, 
     EmployeeService, 
-    DecimalPipe
+    DecimalPipe, 
+    {
+      provide: MatDialogRef,
+      useValue: {}
+    },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent], 
+  entryComponents: [EmployeeComponent]
 })
 export class AppModule { }

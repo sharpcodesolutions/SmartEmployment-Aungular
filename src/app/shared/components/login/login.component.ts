@@ -25,11 +25,12 @@ export class LoginComponent implements OnInit {
    constructor(private authService : AuthService, private router : Router, private route: ActivatedRoute) { }
 
    ngOnInit() {
+      console.log('from the login');
       this.loginForm = new FormGroup({
          username: new FormControl("", [Validators.required]),
          password: new FormControl("", [Validators.required])
-       })
-       this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+      })
+      this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
    }
 
    validateControl = (controlName: string) => {
@@ -54,12 +55,11 @@ export class LoginComponent implements OnInit {
                localStorage.setItem("token", res.token);
                let user:User = {username: userForAuth.email, token: res.token}; 
                localStorage.setItem("user", JSON.stringify(user)); 
-               console.log(tokenDecoder.decodeToken(res.token));
                let roles = JSON.parse(window.atob(res.token.split('.')[1]))["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
 
                console.log('the token is: ' + roles);
                roles = String(roles).split(',');
-               console.log('the roles now are: ' + roles);
+               console.log('user at login is: ' + JSON.stringify(user));
                console.log('isManager at loginn is: ' + (roles.indexOf('Manager') !== -1));
                this.authService.sendAuthStateChangeNotification(res.isAuthSuccessful, user, roles.indexOf('Manager') !== -1);
                this.router.navigate([this.returnUrl]);
