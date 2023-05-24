@@ -19,7 +19,7 @@ export class ErrorInterceptor implements HttpInterceptor {
             else if ([403].indexOf(err.status) !== -1) {
                 this.router.navigateByUrl('/unauthorised');
             }
-            console.log('interceptor works, no error');
+            console.log('interceptor works, no error' + err.status + err.statusText);
             const error = err.error?.message || err.statusText;
             return throwError(error);
         }))
