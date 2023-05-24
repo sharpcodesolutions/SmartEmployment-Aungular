@@ -1,74 +1,18 @@
 <!--Main Navigation-->
-<!-- <header>
-  <nav id="main-navbar"> -->
-    <!-- Container wrapper -->
-<app-top-menu></app-top-menu>
-    <!-- Container wrapper -->
-  <!-- </nav>
-</header> -->
+<header>
+  <nav id="main-navbar">
+    Container wrapper
+    <app-top-menu></app-top-menu>
+    Container wrapper
+  </nav>
+</header>
 <ng-container *ngIf="authService.authChanged | async; else UnAuthorised">
-  <div class="container-fluid" style="margin-top:76px">
-    <div class="row flex-nowrap">
-        <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark" style="box-shadow: 0 2px 5px 0 rgb(0 0 0 / 5%), 0 2px 10px 0 rgb(0 0 0 / 5%);">
-            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
-                <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-                    <span class="fs-5 d-none d-sm-inline">Menu</span>
-                </a>
-                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
-                    <li class="nav-item">
-                      <a [routerLink]="['manager']" class="nav-link align-middle px-0">
-                        <i class="fs-4 bi-house"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">
-                        <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5ZM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5 5 5Z"/>
-                        </svg></i> <span class="ms-1 d-none d-sm-inline">Home</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a [routerLink]="['employee-list']" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
-                        <i class="fs-4 bi-speedometer2"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-speedometer2" viewBox="0 0 16 16">
-                        <path d="M8 4a.5.5 0 0 1 .5.5V6a.5.5 0 0 1-1 0V4.5A.5.5 0 0 1 8 4zM3.732 5.732a.5.5 0 0 1 .707 0l.915.914a.5.5 0 1 1-.708.708l-.914-.915a.5.5 0 0 1 0-.707zM2 10a.5.5 0 0 1 .5-.5h1.586a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 10zm9.5 0a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 1 0 1H12a.5.5 0 0 1-.5-.5zm.754-4.246a.389.389 0 0 0-.527-.02L7.547 9.31a.91.91 0 1 0 1.302 1.258l3.434-4.297a.389.389 0 0 0-.029-.518z"/>
-                        <path fill-rule="evenodd" d="M0 10a8 8 0 1 1 15.547 2.661c-.442 1.253-1.845 1.602-2.932 1.25C11.309 13.488 9.475 13 8 13c-1.474 0-3.31.488-4.615.911-1.087.352-2.49.003-2.932-1.25A7.988 7.988 0 0 1 0 10zm8-7a7 7 0 0 0-6.603 9.329c.203.575.923.876 1.68.63C4.397 12.533 6.358 12 8 12s3.604.532 4.923.96c.757.245 1.477-.056 1.68-.631A7 7 0 0 0 8 3z"/>
-                        </svg></i> <span class="ms-1 d-none d-sm-inline">Employee list</span></a>
-                    </li>
-                    <li>
-                      <a [routerLink]="['/schedule/schedule']" class="nav-link px-0 align-middle">
-                        <i class="fs-4 bi-table"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-table" viewBox="0 0 16 16">
-                        <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm15 2h-4v3h4V4zm0 4h-4v3h4V8zm0 4h-4v3h3a1 1 0 0 0 1-1v-2zm-5 3v-3H6v3h4zm-5 0v-3H1v2a1 1 0 0 0 1 1h3zm-4-4h4V8H1v3zm0-4h4V4H1v3zm5-3v3h4V4H6zm4 4H6v3h4V8z"/>
-                        </svg></i> <span class="ms-1 d-none d-sm-inline">Schedules</span></a>
-                    </li>
-                    <li>
-                      <a [routerLink]="['underconstruction']" class="nav-link px-0 align-middle">
-                        <i class="fs-4 bi-table"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-airplane-engines" viewBox="0 0 16 16">
-                        <path d="M8 0c-.787 0-1.292.592-1.572 1.151A4.347 4.347 0 0 0 6 3v3.691l-2 1V7.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.191l-1.17.585A1.5 1.5 0 0 0 0 10.618V12a.5.5 0 0 0 .582.493l1.631-.272.313.937a.5.5 0 0 0 .948 0l.405-1.214 2.21-.369.375 2.253-1.318 1.318A.5.5 0 0 0 5.5 16h5a.5.5 0 0 0 .354-.854l-1.318-1.318.375-2.253 2.21.369.405 1.214a.5.5 0 0 0 .948 0l.313-.937 1.63.272A.5.5 0 0 0 16 12v-1.382a1.5 1.5 0 0 0-.83-1.342L14 8.691V7.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v.191l-2-1V3c0-.568-.14-1.271-.428-1.849C9.292.591 8.787 0 8 0ZM7 3c0-.432.11-.979.322-1.401C7.542 1.159 7.787 1 8 1c.213 0 .458.158.678.599C8.889 2.02 9 2.569 9 3v4a.5.5 0 0 0 .276.447l5.448 2.724a.5.5 0 0 1 .276.447v.792l-5.418-.903a.5.5 0 0 0-.575.41l-.5 3a.5.5 0 0 0 .14.437l.646.646H6.707l.647-.646a.5.5 0 0 0 .14-.436l-.5-3a.5.5 0 0 0-.576-.411L1 11.41v-.792a.5.5 0 0 1 .276-.447l5.448-2.724A.5.5 0 0 0 7 7V3Z"/>
-                        </svg></i> <span class="ms-1 d-none d-sm-inline">Leave applications</span></a>
-                    </li>
-                </ul>
-                <hr>
-                <div class="dropdown pb-4">
-                    <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="https://github.com/mdo.png" alt="hugenerd" width="30" height="30" class="rounded-circle">
-                        <span class="d-none d-sm-inline mx-1">loser</span>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-                        <li><a class="dropdown-item" href="#">New project...</a></li>
-                        <li><a class="dropdown-item" href="#">Settings</a></li>
-                        <li><a class="dropdown-item" href="#">Profile</a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li><a class="dropdown-item" href="#">Sign out</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="col" style="background-color:lightgray">
-            <div class="bg-grey" style="width:100%">
-              <div class="m-3 border border-1 bg-white border-light rounded shadow-lg container-fluid p-0" style="width:100%;overflow-x:scroll">
-                <router-outlet></router-outlet>
-              </div>
-            </div>
-        </div>
+    <div class="container justify-content-center align-items-center" style="width: 100%; max-width: 1200px; margin-top: 100px; 
+      padding-bottom: 20px; overflow-x: auto;">
+      <div class="border border-1 rounded bg-white p-1 justify-content-center align-items-center" style="width: 1150px; min-width: 1150px;">
+        <router-outlet></router-outlet>
+      </div>
     </div>
-  </div>
 </ng-container>
 
 <ng-template #UnAuthorised>
@@ -76,11 +20,11 @@
     <app-login></app-login>
   </div>
 </ng-template>
-  
+
 <!-- <div class="d-flex" style="position:relative"> -->
 
-  <!--<nav id="sidebarMenu" class=""> --><!-- class="sidebar col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark position-relative">  -->
-    <!-- <app-side-menu></app-side-menu>
+<!--<nav id="sidebarMenu" class=""> --><!-- class="sidebar col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark position-relative">  -->
+<!-- <app-side-menu></app-side-menu>
   </nav>  
 
  <main style="margin-top: 58px;">
