@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from 'src/app/services/auth.service';
-import { User } from '../../models/user';
+import { AuthService } from 'src/app/shared/services/auth.service';
+import { User } from '../../../core/models/user';
 
 @Component({
   selector: 'app-top-menu',

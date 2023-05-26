@@ -1,5 +1,5 @@
 import { Directive, EventEmitter, Input, Output } from '@angular/core';
-import { IEmployee } from 'src/app/sections/models/employee.model';
+import { IEmployee } from 'src/app/core/models/employee.model';
 
 export type SortColumn = keyof IEmployee | '';
 export type SortDirection = 'asc' | 'desc' | '';

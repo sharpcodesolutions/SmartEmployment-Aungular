@@ -1,6 +1,6 @@
 import { HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { IEmployee } from 'src/app/sections/models/employee.model';
+import { IEmployee } from 'src/app/core/models/employee.model';
 
 
 

@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 
-import { AuthService } from 'src/app/services/auth.service';
+import { AuthService } from 'src/app/shared/services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormControl, Validators, FormBuilder }  from '@angular/forms';
 import {FormsModule,ReactiveFormsModule} from '@angular/forms';
-import { UserForAuthenticationDto } from '../../models/user.for.authentication.dto';
-import { AuthResponseDto } from '../../models/auth.response.dto';
+import { UserForAuthenticationDto } from '../../../core/models/user.for.authentication.dto';
+import { AuthResponseDto } from '../../../core/models/auth.response.dto';
 import { HttpErrorResponse } from '@angular/common/http';
-import { User } from '../../models/user';
-import { tokenDecoder } from 'src/app/helpers/token.decoder';
+import { User } from '../../../core/models/user';
+import { tokenDecoder } from 'src/app/core/helpers/token.decoder';
 
 @Component({
    selector: 'app-login',

@@ -1,0 +1,14 @@
+<mat-toolbar>
+    <span>Delete schedule</span>
+  </mat-toolbar>
+  <div mat-dialog-content class="m-1">
+    Are you you want to delete the schedule of employee: {{ data.employeeName }}
+  </div>
+  <div mat-dialog-actions class="m-1">
+    <div class="controls-container">
+      <div class="button-row">
+        <button mat-raised-button (click)="onClose()" color="primary" mat-button mat-dialog-close class="m-1">No</button>
+        <button mat-raised-button color="warn" mat-button [mat-dialog-close]="data.schedule" class="m-1" cdkFocusInitial>Ok</button>
+      </div>
+    </div>
+  </div>
