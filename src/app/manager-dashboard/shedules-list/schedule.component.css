@@ -26,14 +26,24 @@
     width: 100%; 
  }
 
- table .plus {
+table .plus {
   color: green;
   text-align: center;
-  }
+  cursor:pointer; 
+  height:30px; 
+  width:30px
+}
 
-  table .plus :hover {
+  /* table .plus :hover {
     color: greenyellow;
-  }
+  } */
+
+table .plus.rounded-circle:hover {
+    box-shadow: none;
+    background-color: darkgray;
+    color: greenyellow;
+    transform: translate(1px,1px);
+}
 
   table .delete {
     color: red;
