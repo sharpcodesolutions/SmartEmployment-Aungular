@@ -31,7 +31,11 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
 import { ManagerModule } from './manager-dashboard/manager.module';
+import { EmployeeModule } from './employee-dashboard/employee.module';
+import { DropdownComponent } from './shared/components/top-menu/dropdown/dropdown.component';
+
 import { NgbdSortableHeader } from './shared/directives/sortable.directive';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -40,7 +44,8 @@ import { NgbdSortableHeader } from './shared/directives/sortable.directive';
     LogoutComponent,
     LoginComponent,
     UnauthorisedComponent, SideMenuComponent, TopMenuComponent, UnderConstructionComponent, 
-    NgbdSortableHeader
+    NgbdSortableHeader, 
+    DropdownComponent
   ],
   imports: [
     BrowserModule,
@@ -60,7 +65,9 @@ import { NgbdSortableHeader } from './shared/directives/sortable.directive';
     MatTableModule, 
     MatPaginatorModule, 
     MatSortModule, 
-    ManagerModule
+    ManagerModule, 
+    EmployeeModule, 
+    MatSelectModule
   ],
   providers: [
     ManagerGuardGuard, 

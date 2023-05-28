@@ -11,6 +11,7 @@ import { UnauthorisedComponent } from './shared/components/unauthorised/unauthor
 import { AppComponent } from './app.component';
 import { UnderConstructionComponent } from './shared/components/under-construction/under-construction.component';
 import { ScheduleComponent } from './manager-dashboard/shedules-list/schedule.component';
+import { EmployeeComponent } from './employee-dashboard/employee.component';
 
 const routes: Routes = [  
   { path: '', redirectTo: 'manager', pathMatch: 'full' },
@@ -25,6 +26,7 @@ const routes: Routes = [
   // { path: 'schedule', loadChildren: () => import('./manager-dashboard/manager.module').then(x => x.ManagerModule), canActivate: [ManagerGuardGuard]},
   { path: 'schedule', component: ScheduleComponent, canActivate: [ManagerGuardGuard], children:[
   ]},
+  { path: 'employee', component: EmployeeComponent},
   { path: '**', redirectTo: 'mamanger', pathMatch: 'full' },
 ];
 
