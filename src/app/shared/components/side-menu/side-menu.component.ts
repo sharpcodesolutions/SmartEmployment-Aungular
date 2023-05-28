@@ -26,10 +26,10 @@ export class SideMenuComponent implements OnInit {
     .subscribe(res => {
        this.authUser = res;
     });
-    this.authService.isManagerChanged
-    .subscribe(res => {
-      this.isManager = res;
-    });
+    //this.authService.isManagerChanged
+    //.subscribe(res => {
+    //  this.isManager = res;
+    //});
     console.log('isManager is: ' + this.isManager + ' and the subject is: ');
     console.log('from the side menu'); 
   }

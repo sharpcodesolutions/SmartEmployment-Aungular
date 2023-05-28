@@ -20,8 +20,8 @@ export class AuthService {
    private authUserSub = new Subject<User>(); 
    public authUserChanged = this.authUserSub.asObservable(); 
 
-   private isManagerSub = new Subject<boolean>();  
-   public isManagerChanged = this.isManagerSub.asObservable();
+   // private isManagerSub = new Subject<boolean>();  
+   // public isManagerChanged = this.isManagerSub.asObservable();
 
    constructor(private http: HttpClient, private envUrl: EnvironmentUrlService) { 
       // this.authChangeSub.next(false); 
@@ -48,7 +48,7 @@ export class AuthService {
    public sendAuthStateChangeNotification = (isAuthenticated: boolean, user: User, isManager: boolean) => {
       this.authChangeSub.next(isAuthenticated);
       this.authUserSub.next(user); 
-      this.isManagerSub.next(isManager);
+      // this.isManagerSub.next(isManager);
       // this.isAuthenticated();
       // this.isUserManager();
    }
@@ -70,6 +70,23 @@ export class AuthService {
       }
    }
 
+   public isUserManager = () => {
+      if(localStorage["token"]) {
+         let roles = JSON.parse(window.atob(localStorage["token"].split('.')[1]))["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
+         roles = String(roles).split(',');
+         let isManager = (roles.indexOf('Manager') !== -1);
+         //this.isManagerSub.next(isManager);
+         //this.isManagerChanged = this.isManagerSub.asObservable();
+         return isManager;
+      }          
+      else
+      {
+         //this.isManagerSub.next(false)
+         //this.isManagerChanged = this.isManagerSub.asObservable(); 
+         return false; 
+      }
+   }
+
    public getCurrUser = (): User => {
       if(localStorage["token"]) {
          let user:User = JSON.parse(localStorage["user"]);
@@ -79,23 +96,6 @@ export class AuthService {
       {
          let user:User = {};
          return user;
-      }
-   }
-
-   public isUserManager = () => {
-      if(localStorage["token"]) {
-         let roles = JSON.parse(window.atob(localStorage["token"].split('.')[1]))["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
-         roles = String(roles).split(',');
-         let isManager = (roles.indexOf('Manager') !== -1);
-         this.isManagerSub.next(isManager);
-         this.isManagerChanged = this.isManagerSub.asObservable();
-         return true;
-      }          
-      else
-      {
-         this.isManagerSub.next(false)
-         this.isManagerChanged = this.isManagerSub.asObservable(); 
-         return false; 
       }
    }
 

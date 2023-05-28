@@ -17,17 +17,17 @@ export class ManagerGuardGuard implements CanActivate {
       this.isUserAuthenticated = this.authService.isAuthenticated(); 
       this.isManager = this.authService.isUserManager();
       this.authService.authChanged
-    .subscribe(res => {
-       this.isUserAuthenticated = res;
-    });
-    this.authService.authUserChanged
-    .subscribe(res => {
-       this.authUser = res;
-    });
-    this.authService.isManagerChanged
-    .subscribe(res => {
-      this.isManager = res;
-    });
+      .subscribe(res => {
+         this.isUserAuthenticated = res;
+      });
+      this.authService.authUserChanged
+      .subscribe(res => {
+         this.authUser = res;
+      });
+      // this.authService.isManagerChanged
+      // .subscribe(res => {
+      //    this.isManager = res;
+      // });
    }
 
    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
