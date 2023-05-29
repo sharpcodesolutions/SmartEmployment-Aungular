@@ -56,12 +56,12 @@ export class LoginComponent implements OnInit {
                let user:User = {username: userForAuth.email, token: res.token}; 
                localStorage.setItem("user", JSON.stringify(user)); 
                let roles = JSON.parse(window.atob(res.token.split('.')[1]))["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
-
+               roles = String(roles).split(','); 
                console.log('the token is: ' + roles);
                roles = String(roles).split(',');
                console.log('user at login is: ' + JSON.stringify(user));
                console.log('isManager at loginn is: ' + (roles.indexOf('Manager') !== -1));
-               this.authService.sendAuthStateChangeNotification(res.isAuthSuccessful, user, roles.indexOf('Manager') !== -1);
+               this.authService.sendAuthStateChangeNotification(res.isAuthSuccessful, user, roles.indexOf('Manager') !== -1, roles);
                this.router.navigate([this.returnUrl]);
             },
             error: (err: HttpErrorResponse) => {

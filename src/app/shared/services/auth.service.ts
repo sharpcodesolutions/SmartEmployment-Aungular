@@ -9,6 +9,7 @@ import { AuthResponseDto } from '../../core/models/auth.response.dto';
 import { User } from '../../core/models/user';
 import { UserForAuthenticationDto } from '../../core/models/user.for.authentication.dto';
 import { EnvironmentUrlService } from './environment-url.service';
+import { Roles } from 'src/app/core/models/roles';
 
 @Injectable({
    providedIn: 'root'
@@ -20,6 +21,9 @@ export class AuthService {
    private authUserSub = new Subject<User>(); 
    public authUserChanged = this.authUserSub.asObservable(); 
 
+   private authRoleSub = new BehaviorSubject<string[]>([]);
+   public authRoleChanged = this.authRoleSub.asObservable(); 
+
    // private isManagerSub = new Subject<boolean>();  
    // public isManagerChanged = this.isManagerSub.asObservable();
 
@@ -28,10 +32,14 @@ export class AuthService {
       if(localStorage["token"]) {
          this.authChangeSub.next(true); 
          this.authUserSub.next(localStorage["user"]); 
+         let roles = JSON.parse(window.atob(localStorage["token"].split('.')[1]))["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
+         roles = String(roles).split(',');
+         this.authRoleSub.next(roles); 
       }
       else { 
          this.authChangeSub.next(false); 
          this.authUserSub.next(null!); 
+         this.authRoleSub.next(null!); 
       }          
    }
 
@@ -42,12 +50,13 @@ export class AuthService {
    public logout = () => {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
-      this.sendAuthStateChangeNotification(false, null!, false);
+      this.sendAuthStateChangeNotification(false, null!, false, null!);
     }
 
-   public sendAuthStateChangeNotification = (isAuthenticated: boolean, user: User, isManager: boolean) => {
+   public sendAuthStateChangeNotification = (isAuthenticated: boolean, user: User, isManager: boolean, roles: string[]) => {
       this.authChangeSub.next(isAuthenticated);
       this.authUserSub.next(user); 
+      this.authRoleSub.next(roles); 
       // this.isManagerSub.next(isManager);
       // this.isAuthenticated();
       // this.isUserManager();
@@ -65,9 +74,18 @@ export class AuthService {
          this.authChangeSub.next(false)
          this.authUserSub = new BehaviorSubject<User>(null!);
          // this.authUserChanged = this.authUserSub.asObservable(); 
-         this.sendAuthStateChangeNotification(false, null!, false);
+         this.sendAuthStateChangeNotification(false, null!, false, null!);
          return false; 
       }
+   }
+
+   public getRoles(): string[] {
+      if(localStorage["token"]) {
+         let roles = JSON.parse(window.atob(localStorage["token"].split('.')[1]))["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
+         roles = String(roles).split(','); 
+         return roles;
+      }
+      return [];
    }
 
    public isUserManager = () => {
