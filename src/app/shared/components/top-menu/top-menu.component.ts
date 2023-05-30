@@ -20,7 +20,6 @@ export class TopMenuComponent implements OnInit {
 
   ngOnInit(): void {
     this.isUserAuthenticated = this.authService.isAuthenticated(); 
-    this.isUserManager = this.authService.isUserManager();
     this.authUser = this.authService.getCurrUser(); 
     this.userRoles = this.authService.getRoles(); 
     this.authService.authChanged.subscribe(res => {

@@ -61,7 +61,7 @@ export class LoginComponent implements OnInit {
                roles = String(roles).split(',');
                console.log('user at login is: ' + JSON.stringify(user));
                console.log('isManager at loginn is: ' + (roles.indexOf('Manager') !== -1));
-               this.authService.sendAuthStateChangeNotification(res.isAuthSuccessful, user, roles.indexOf('Manager') !== -1, roles);
+               this.authService.sendAuthStateChangeNotification(res.isAuthSuccessful, user, roles);
                this.router.navigate([this.returnUrl]);
             },
             error: (err: HttpErrorResponse) => {

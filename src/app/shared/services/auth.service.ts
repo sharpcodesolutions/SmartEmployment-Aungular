@@ -49,10 +49,10 @@ export class AuthService {
    public logout = () => {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
-      this.sendAuthStateChangeNotification(false, null!, false, null!);
+      this.sendAuthStateChangeNotification(false, null!, null!);
     }
 
-   public sendAuthStateChangeNotification = (isAuthenticated: boolean, user: User, isManager: boolean, roles: string[]) => {
+   public sendAuthStateChangeNotification = (isAuthenticated: boolean, user: User, roles: string[]) => {
       this.authChangeSub.next(isAuthenticated);
       this.authUserSub.next(user); 
       this.authRoleSub.next(roles); 
@@ -85,23 +85,6 @@ export class AuthService {
          return roles;
       }
       return [];
-   }
-
-   public isUserManager = () => {
-      if(localStorage["token"]) {
-         let roles = JSON.parse(window.atob(localStorage["token"].split('.')[1]))["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
-         roles = String(roles).split(',');
-         let isManager = (roles.indexOf('Manager') !== -1);
-         //this.isManagerSub.next(isManager);
-         //this.isManagerChanged = this.isManagerSub.asObservable();
-         return isManager;
-      }          
-      else
-      {
-         //this.isManagerSub.next(false)
-         //this.isManagerChanged = this.isManagerSub.asObservable(); 
-         return false; 
-      }
    }
 
    public getCurrUser = (): User => {

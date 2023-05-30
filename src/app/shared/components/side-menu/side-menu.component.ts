@@ -17,7 +17,6 @@ export class SideMenuComponent implements OnInit {
 
   ngOnInit(): void {
     this.isUserAuthenticated = this.authService.isAuthenticated(); 
-    this.isManager = this.authService.isUserManager();
     this.authService.authChanged
     .subscribe(res => {
        this.isUserAuthenticated = res;
