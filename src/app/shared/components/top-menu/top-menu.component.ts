@@ -23,23 +23,19 @@ export class TopMenuComponent implements OnInit {
     this.isUserManager = this.authService.isUserManager();
     this.authUser = this.authService.getCurrUser(); 
     this.userRoles = this.authService.getRoles(); 
-    this.authService.authChanged
-    .subscribe(res => {
-       this.isUserAuthenticated = res;
+    this.authService.authChanged.subscribe(res => {
+      this.isUserAuthenticated = res;
+      console.log('isUserSuthenticsted subscribed');
     });
-    this.authService.authUserChanged
-    .subscribe(res => {
-       this.authUser = res;
+    this.authService.authUserChanged.subscribe(res => {
+      this.authUser = res as User;      
+      console.log('authUserChanched subscribed');
     });
-    this.authService.authRoleChanged
-    .subscribe(res => {
+    
+    this.authService.authRoleChanged.subscribe(res => {
       this.userRoles = res;
+      console.log('userRole is subscribed');
     });
-    console.log('from the top menu, is auth is: ' + this.isUserAuthenticated);
-    console.log('from the top menu, token is: ' + localStorage["token"]);
-    console.log('from the top menu, user is: ' + localStorage["user"]);
-    console.log('from top menu, user is: ' + this.authUser); 
-    console.log('from top menu, user is a manager? ' + this.isUserManager);
   }
 
   selectionChanged(selectedValue: string) : void {

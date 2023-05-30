@@ -17,8 +17,7 @@ import { Roles } from 'src/app/core/models/roles';
 export class AuthService {
    private authChangeSub = new BehaviorSubject<boolean>(false); 
    public authChanged = this.authChangeSub.asObservable(); 
-
-   private authUserSub = new Subject<User>(); 
+   private authUserSub = new BehaviorSubject<User>(null!); 
    public authUserChanged = this.authUserSub.asObservable(); 
 
    private authRoleSub = new BehaviorSubject<string[]>([]);
@@ -30,7 +29,7 @@ export class AuthService {
    constructor(private http: HttpClient, private envUrl: EnvironmentUrlService) { 
       // this.authChangeSub.next(false); 
       if(localStorage["token"]) {
-         this.authChangeSub.next(true); 
+         this.authChangeSub.next(true);
          this.authUserSub.next(localStorage["user"]); 
          let roles = JSON.parse(window.atob(localStorage["token"].split('.')[1]))["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
          roles = String(roles).split(',');
@@ -71,10 +70,10 @@ export class AuthService {
       }          
       else
       {
-         this.authChangeSub.next(false)
-         this.authUserSub = new BehaviorSubject<User>(null!);
+         // this.authChangeSub.next(false)
+         // this.authUserSub = new BehaviorSubject<User>(null!);
          // this.authUserChanged = this.authUserSub.asObservable(); 
-         this.sendAuthStateChangeNotification(false, null!, false, null!);
+         // this.sendAuthStateChangeNotification(false, null!, false, null!);
          return false; 
       }
    }
