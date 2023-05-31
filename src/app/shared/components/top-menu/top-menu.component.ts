@@ -22,14 +22,17 @@ export class TopMenuComponent implements OnInit {
     this.isUserAuthenticated = this.authService.isAuthenticated(); 
     this.authUser = this.authService.getCurrUser(); 
     this.userRoles = this.authService.getRoles(); 
+    
     this.authService.authChanged.subscribe(res => {
       this.isUserAuthenticated = res;
+      this.authUser = this.authService.getCurrUser(); 
       console.log('isUserSuthenticsted subscribed');
     });
-    this.authService.authUserChanged.subscribe(res => {
-      this.authUser = res as User;      
-      console.log('authUserChanched subscribed');
-    });
+    
+    // this.authService.authUserChanged.subscribe(res => {
+    //   this.authUser = res as User;      
+    //   console.log('authUserChanched subscribed');
+    // });
     
     this.authService.authRoleChanged.subscribe(res => {
       this.userRoles = res;

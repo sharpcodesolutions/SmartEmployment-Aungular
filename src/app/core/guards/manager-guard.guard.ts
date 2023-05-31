@@ -15,18 +15,20 @@ export class ManagerGuardGuard implements CanActivate {
 
    constructor(private authService: AuthService, private router: Router) {
       this.isUserAuthenticated = this.authService.isAuthenticated(); 
-      this.authService.authChanged
-      .subscribe(res => {
+
+      this.authService.authChanged.subscribe(res => {
          this.isUserAuthenticated = res;
       });
-      this.authService.authUserChanged
-      .subscribe(res => {
+
+      this.authService.authUserChanged.subscribe(res => {
          this.authUser = res;
+      });    
+
+      this.authService.authRoleChanged.subscribe(res => {
+         let userRoles = this.authService.getRoles(); 
+         if(userRoles.indexOf('Manager') !== -1)
+            this.isManager = true; 
       });
-      // this.authService.isManagerChanged
-      // .subscribe(res => {
-      //    this.isManager = res;
-      // });
    }
 
    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
@@ -39,6 +41,7 @@ export class ManagerGuardGuard implements CanActivate {
          this.router.navigate(['/unauthorised']);
          return false; 
       }
+      console.log('can activate');
       this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
       return false;
    }
