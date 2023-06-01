@@ -9,6 +9,14 @@ import { ScheduleService } from '../services/schedule.service';
 import { faPencil, faTimes, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NotifictionService } from '../services/notifiction.service';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import {
+  CdkDrag,
+  CdkDragPlaceholder,
+  CdkDropList
+} from '@angular/cdk/drag-drop';
+import {NgFor} from '@angular/common';
+
 import * as moment from 'moment';
 
 @Component({
@@ -29,6 +37,7 @@ export class ScheduleComponent implements OnInit {
   faTimes = faTimes; 
   faPencil = faPencil;
   faPlus = faPlus;
+  daysOfTheWeek: Date[] = this.currentWeekDays(); 
 
   constructor(private authService:AuthService, public employeeService:EmployeeService, 
     public scheduleService:ScheduleService, public datePipe:DatePipe, public dialog: MatDialog)
@@ -141,6 +150,33 @@ export class ScheduleComponent implements OnInit {
       });
     });
   }
+
+  drop(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.schedules, event.previousIndex, event.currentIndex);
+    console.log('dropped');
+  }
+
+  onDragStarted() {
+    // Code to execute when dragging starts
+  }
+  
+  onDragEnded() {
+    // Code to execute when dragging ends
+  }
+  
+  onDragReleased(event: CdkDragDrop<any, any, any>) {
+    if (event.previousContainer !== event.container) {
+      // Code to execute when an element is dropped into a different container
+    } else {
+      // Code to execute when an element is dropped within the same container
+      moveItemInArray(
+        this.currentWeekDays(),
+        event.previousIndex,
+        event.currentIndex
+      );
+    }
+  }
+  
 
   openDialog(enterAnimationDuration: string, exitAnimationDuration: string, employeeName: string, schedule: ISchedule): void {
     const dialogRef = this.dialog.open(DialogAnimationsExampleDialog, {

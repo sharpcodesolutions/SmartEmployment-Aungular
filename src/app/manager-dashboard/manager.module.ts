@@ -5,7 +5,6 @@ import { RouterModule } from '@angular/router';
 // Import components specific to the manager dashboard
 import { EmployeeComponent } from './employees-list/employee/employee.component';
 import { EmployeeListComponent } from './employees-list/employee-list.component';
-import { ScheduleComponent } from './shedules-list/schedule.component';
 import { ManagerComponent } from './manager.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -28,6 +27,9 @@ import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { DialogAnimationsExampleDialog } from './shedules-list/schedule.component';
 import { DialogAnimationsAddEdit } from './shedules-list/schedule.component';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { ScheduleComponent } from './shedules-list/schedule.component';
+
 
 @NgModule({
   declarations: [
@@ -41,6 +43,7 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
   ],
   imports: [
     CommonModule, 
+    DragDropModule,
     MatToolbarModule, 
     ReactiveFormsModule,
     MatGridListModule,
@@ -81,7 +84,7 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
     MatIconModule, 
     MatPaginatorModule,
     MatSortModule, 
-    MatDialogModule, 
+    MatDialogModule
   ], 
   providers: [
     DatePipe
