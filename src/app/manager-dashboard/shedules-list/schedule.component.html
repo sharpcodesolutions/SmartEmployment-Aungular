@@ -12,7 +12,7 @@
                 <th class="tbl-head">Sun</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody cdkDropListGroup>
             <tr *ngFor="let employee of employees$ | async">
                 <td>
                     <div class="card text-center bg-transparent border-0" style="max-width: 540px;">
@@ -25,11 +25,12 @@
                     </div>
                 </td>
                 <ng-container *ngIf="schedules$ | async as data">
-                    <td *ngFor="let day of daysOfTheWeek; index as i" 
-                        class="fit justify-content-center align-items-center">  
-                        <div id="source" cdkDropList (cdkDropListDropped)="drop($event)"
-                            cdkDropListConnectedTo="destination" *ngIf="getScheduleForEmployee(employee.id!, i); else add">        
-                            <div cdkDrag class="card shadow-sm">
+                    <td cdkDropList *ngFor="let day of daysOfTheWeek; index as i" 
+                        class="fit justify-content-center align-items-center" (cdkDropListDropped)="drop($event)">  
+                        <div class="drag-boundary">                        
+                        <div cdkDrag (cdkDragEntered)="dragEntered()" (cdkDragExited)="dragExited()"> 
+                        <div *ngIf="getScheduleForEmployee(employee.id!, i); else add">        
+                            <div class="card shadow-sm">
                                 <div class="d-flex">
                                     <div class="m-1 pencil" style="cursor: pointer"
                                         (click)="openEditDialog('300ms', '150ms', employee.firstname, getScheduleForEmployee(employee.id!, i))">
@@ -47,23 +48,24 @@
                                 </div>
                             </div>
                         </div>
-                        <ng-template #add>                                                                   
-                            <div class="card border-0 bg-transparent my-3">
-                                <div class="card-body d-flex justify-content-center align-items-center">
-                                    <div
-                                        id="destination"
-                                        cdkDropList
-                                        cdkDropListConnectedTo="source"
-                                        (cdkDropListDropped)="drop($event)">    
-                                        <div class="m-1 pt-1 plus rounded-circle shadow-sm"
-                                            (click)="openAddDialog('300ms', '150ms', employee.id!, employee.firstname, i, day)">
-                                            <fa-icon [icon]="faPlus"></fa-icon>
+                        <ng-template #add>        
+                            <div *ngIf="!isDragEntered">     
+                                <div class="card border-0 bg-transparent">         
+                                    <div class="card-body d-flex justify-content-center align-items-center">
+                                        <div>  
+                                            <div class="m-1 pt-1 plus rounded-circle shadow-sm"
+                                                (click)="openAddDialog('300ms', '150ms', employee.id!, employee.firstname, i, day)">
+                                                <fa-icon [icon]="faPlus"></fa-icon>
+                                            </div>
+                                            <i class="fa fa-plus" aria-hidden="true"></i>
                                         </div>
-                                        <i class="fa fa-plus" aria-hidden="true"></i>
-                                    </div>
-                                </div>  
-                            </div>
-                        </ng-template>
+                                    </div>  
+                                </div>
+                            </div>                                 
+                        </ng-template>                        
+                        <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
+                        </div>       
+                        </div>                 
                     </td>
                 </ng-container>
             </tr>

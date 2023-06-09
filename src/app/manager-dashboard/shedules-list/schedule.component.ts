@@ -38,6 +38,7 @@ export class ScheduleComponent implements OnInit {
   faPencil = faPencil;
   faPlus = faPlus;
   daysOfTheWeek: Date[] = this.currentWeekDays(); 
+  isDragEntered: Boolean = false; 
 
   constructor(private authService:AuthService, public employeeService:EmployeeService, 
     public scheduleService:ScheduleService, public datePipe:DatePipe, public dialog: MatDialog)
@@ -151,9 +152,14 @@ export class ScheduleComponent implements OnInit {
     });
   }
 
-  drop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.schedules, event.previousIndex, event.currentIndex);
-    console.log('dropped');
+  dragEntered() {
+    this.isDragEntered = true;
+    console.log('drag entered'); 
+  }
+
+  dragExited() {
+    this.isDragEntered = false; 
+    console.log('drag exited');
   }
 
   onDragStarted() {
@@ -163,10 +169,20 @@ export class ScheduleComponent implements OnInit {
   onDragEnded() {
     // Code to execute when dragging ends
   }
+
+  drop(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.schedules, event.previousIndex, event.currentIndex);
+    this.isDragEntered = false; 
+    console.log('drag released' + event.previousIndex + ' ' + event.currentIndex);
+  }
   
   onDragReleased(event: CdkDragDrop<any, any, any>) {
     if (event.previousContainer !== event.container) {
       // Code to execute when an element is dropped into a different container
+      moveItemInArray(
+        this.schedules, 
+        event.previousIndex, 
+        event.currentIndex);
     } else {
       // Code to execute when an element is dropped within the same container
       moveItemInArray(
