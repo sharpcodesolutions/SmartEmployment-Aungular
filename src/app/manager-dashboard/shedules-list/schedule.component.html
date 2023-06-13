@@ -14,6 +14,7 @@
         </thead>
         <tbody cdkDropListGroup>
             <tr *ngFor="let employee of employees$ | async">
+                <!-- let schedule = this.schedules.find(s => s.employeeId === employeeId && s.dayIndex === i)!; -->
                 <td>
                     <div class="card text-center bg-transparent border-0" style="max-width: 540px;">
                         <div class="card-body bg-transparent border-0 m-0 p-1">
@@ -24,13 +25,17 @@
                         </div>
                     </div>
                 </td>
-                <ng-container *ngIf="schedules$ | async as data">
-                    <td cdkDropList *ngFor="let day of daysOfTheWeek; index as i" 
-                        class="fit justify-content-center align-items-center" (cdkDropListDropped)="drop($event)">  
-                        <div class="drag-boundary">                        
-                        <div cdkDrag (cdkDragEntered)="dragEntered()" (cdkDragExited)="dragExited()"> 
-                        <div *ngIf="getScheduleForEmployee(employee.id!, i); else add">        
-                            <div class="card shadow-sm">
+                <ng-container *ngIf="AllSchedules">
+                    <!-- <ng-template *ngFor="let allSchedules of [getAllScheduleForEmployee(employee.id)]">  -->
+                    <td *ngFor="let schedule of getAllScheduleForEmployee(employee.id); index as i" 
+                        class="fit justify-content-center align-items-center drag-boundary" 
+                        cdkDropList 
+                        (cdkDropListDropped)="drop($event)"
+                        [cdkDropListData]="getAllScheduleForEmployee(employee.id)"
+                        >  
+                        <div *ngIf="schedule.active; else add" >      
+                            <div class="card shadow-sm" cdkDrag (cdkDragEntered)="dragEntered()" (cdkDragExited)="dragExited()" 
+                                cdkDropListSortingDisabled>
                                 <div class="d-flex">
                                     <div class="m-1 pencil" style="cursor: pointer"
                                         (click)="openEditDialog('300ms', '150ms', employee.firstname, getScheduleForEmployee(employee.id!, i))">
@@ -42,31 +47,32 @@
                                     </div>
                                 </div>                        
                                 <div class="card-header">
-                                    <b>{{ datePipe.transform(getScheduleForEmployee(employee.id!, i).startTime, 'shortTime') + ' - ' + 
-                                        datePipe.transform(getScheduleForEmployee(employee.id!, i).endTime, 'shortTime') }}</b>
-                                    <p>{{ getScheduleForEmployee(employee.id!, i).comments }}</p> 
+                                    <b>{{ datePipe.transform(schedule.startTime, 'shortTime') + ' - ' + 
+                                        datePipe.transform(schedule.endTime, 'shortTime') }}</b>
+                                    <p>{{ schedule.comments }}</p> 
                                 </div>
                             </div>
                         </div>
-                        <ng-template #add>        
-                            <div *ngIf="!isDragEntered">     
-                                <div class="card border-0 bg-transparent">         
-                                    <div class="card-body d-flex justify-content-center align-items-center">
-                                        <div>  
-                                            <div class="m-1 pt-1 plus rounded-circle shadow-sm"
-                                                (click)="openAddDialog('300ms', '150ms', employee.id!, employee.firstname, i, day)">
-                                                <fa-icon [icon]="faPlus"></fa-icon>
+                        <ng-template #add>   
+                            <div> 
+                                <!-- <div class="example-custom-placeholder" *cdkDragPlaceholder></div>  -->
+                                <div *ngIf="!isDragEntered">     
+                                    <div class="card border-0 bg-transparent">         
+                                        <div class="card-body d-flex justify-content-center align-items-center">
+                                            <div>  
+                                                <div class="m-1 pt-1 plus rounded-circle shadow-sm">
+                                                    <!-- (click)="openAddDialog('300ms', '150ms', employee.id!, employee.firstname, i, day)"> -->
+                                                    <fa-icon [icon]="faPlus"></fa-icon>
+                                                </div>
+                                                <i class="fa fa-plus" aria-hidden="true"></i>
                                             </div>
-                                            <i class="fa fa-plus" aria-hidden="true"></i>
-                                        </div>
-                                    </div>  
-                                </div>
-                            </div>                                 
-                        </ng-template>                        
-                        <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
-                        </div>       
-                        </div>                 
+                                        </div>  
+                                    </div>
+                                </div>      
+                            </div>                               
+                        </ng-template>                      
                     </td>
+                <!-- </ng-template> -->
                 </ng-container>
             </tr>
         </tbody>

@@ -2,11 +2,12 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { AuthService } from 'src/app/shared/services/auth.service';
-import { ISchedule } from '../../core/models/schedule.model';
+import { IAllSchedules, ISchedule } from '../../core/models/schedule.model';
 import { debounceTime, delay, switchMap, tap } from 'rxjs/operators';
 import { DatePipe } from '@angular/common';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as moment from 'moment'
+import { IEmployee } from 'src/app/core/models/employee.model';
 
 @Injectable({
   providedIn: 'root'
@@ -86,5 +87,48 @@ export class ScheduleService {
 		this.form.patchValue({endTime: end}); 
 
 		// this.form.patchValue({endTime: schedule.endTime.toString()})
+	}
+
+	getScheduleForEmployee(employeeId:number, i:number, schedules:ISchedule[]) : ISchedule {
+		let schedule = schedules.find(s => s.employeeId === employeeId && s.dayIndex === i)!;
+		return schedule; 
+	  }
+
+	SchedulesToAllSchedules(schedules:ISchedule[], employees:IEmployee[]) : IAllSchedules[] {
+		console.log('from inside schedulesToAllSchedules, employee length is: ' + employees.length + ' and schedules length is: '
+			+ schedules.length);
+		let total = employees.length; 
+		let allSchedules:IAllSchedules[] = [];
+		for(var i=0; i<total; i++) {
+			for(var day=0; day<7; day++)
+			{
+				let schedule = this.getScheduleForEmployee(employees[i].id, day, schedules);
+				if(schedule) {
+					let singleAllSchedule:IAllSchedules = {
+						id:i,
+						date:schedule.date,
+						dayIndex:schedule.dayIndex, 
+						startTime:schedule.startTime, 
+						endTime:schedule.endTime, 
+						hours:schedule.hours, 
+						comments:schedule.comments, 
+						employeeId:schedule.employeeId, 
+						taskId:schedule.taskId,
+						active:true 
+					}
+					allSchedules.push(singleAllSchedule); 		
+				}
+				else {
+					let singleAllSchedule:IAllSchedules = {
+						id:i,						
+						employeeId:employees[i].id, 
+						active:false 
+					}
+					allSchedules.push(singleAllSchedule); 
+				}
+			}	
+		}
+
+		return allSchedules; 
 	}
 }

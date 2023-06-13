@@ -11,3 +11,16 @@ export interface ISchedule {
     employeeId:number, 
     taskId?:number
 }
+
+export interface IAllSchedules {
+    id:number, 
+    date?:Date,
+    dayIndex?:number,
+    startTime?:Date,
+    endTime?:Date, 
+    hours?:number, 
+    comments?:string, 
+    employeeId:number, 
+    taskId?:number,
+    active:boolean
+}

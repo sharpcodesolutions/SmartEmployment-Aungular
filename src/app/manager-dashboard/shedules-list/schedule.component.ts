@@ -4,16 +4,18 @@ import { Observable, map, of, BehaviorSubject } from 'rxjs';
 import { IEmployee } from 'src/app/core/models/employee.model';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { EmployeeService } from '../services/employee.service';
-import { ISchedule } from 'src/app/core/models/schedule.model';
+import { IAllSchedules, ISchedule } from 'src/app/core/models/schedule.model';
 import { ScheduleService } from '../services/schedule.service';
 import { faPencil, faTimes, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NotifictionService } from '../services/notifiction.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { forkJoin } from 'rxjs';
 import {
   CdkDrag,
   CdkDragPlaceholder,
-  CdkDropList
+  CdkDropList, 
+  transferArrayItem
 } from '@angular/cdk/drag-drop';
 import {NgFor} from '@angular/common';
 
@@ -27,9 +29,11 @@ import * as moment from 'moment';
 export class ScheduleComponent implements OnInit {
   isUserAuthenticated: boolean = false;
   employees$: Observable<IEmployee[]> = of([]);
+  employees: IEmployee[] = [];
   total$: Observable<number> = of(0);
-  schedules$: Observable<ISchedule[]> = of([]);
+  //schedules$: Observable<ISchedule[]> = of([]);
   schedules: ISchedule[] = [];
+  AllSchedules: IAllSchedules[] = [];
   startDate$: BehaviorSubject<Date> = new BehaviorSubject<Date>(new Date());
   endDate$: BehaviorSubject<Date> = new BehaviorSubject<Date>(new Date());
   startDate: Date = new Date(); 
@@ -49,9 +53,11 @@ export class ScheduleComponent implements OnInit {
   ngOnInit(): void {
     console.log('from the schedule list');
     this.isUserAuthenticated = this.authService.isAuthenticated(); 
-    this.authService.authChanged
-    .subscribe(res => {
-       this.isUserAuthenticated = res;
+    this.authService.authChanged.subscribe(res => {
+      this.isUserAuthenticated = res;
+    });
+    this.employeeService.GetEmployees().subscribe(employees => {
+      this.employees = employees; 
     });
 
     this.employees$ = this.employeeService.employees$;
@@ -60,18 +66,35 @@ export class ScheduleComponent implements OnInit {
     this.endDate$.next(this.currentWeekDays()[6]); 
     this.startDate$.subscribe(date => this.startDate = date); 
     this.endDate$.subscribe(date => this.endDate = date); 
-    this.schedules$ = this.scheduleService.GetSchedules(this.startDate, this.endDate);
+    //this.schedules$ = this.scheduleService.GetSchedules(this.startDate, this.endDate);
 
-    this.scheduleService.GetSchedules(this.startDate, this.endDate).subscribe(schedules => {
-      this.schedules = schedules; 
+    // this.scheduleService.GetSchedules(this.startDate, this.endDate).subscribe(schedules => {
+    //   this.schedules = schedules; 
+    //   this.AllSchedules = this.scheduleService.SchedulesToAllSchedules(schedules, this.employees);
+    // });
+    const _employees$ = this.employeeService.GetEmployees();
+    const _schedules$ = this.scheduleService.GetSchedules(this.startDate, this.endDate);
+
+    // Use forkJoin to wait for both requests to complete
+    forkJoin([_employees$, _schedules$]).subscribe(([employees, schedules]) => {
+      // Both requests have completed, so you can assign the values and call SchedulesToAllSchedules
+      this.employees = employees;
+      this.schedules = schedules;
+
+      this.AllSchedules = this.scheduleService.SchedulesToAllSchedules(this.schedules, this.employees);
     });
     // this.schedules$.forEach(s => console.log(s));
-    console.log('the schedules are: ' + this.schedules$);
+    //console.log('the schedules are: ' + this.schedules$);
   }
 
   getScheduleForEmployee(employeeId:number, i:number) : ISchedule {
     let schedule = this.schedules.find(s => s.employeeId === employeeId && s.dayIndex === i)!;
     return schedule; 
+  }
+
+  getAllScheduleForEmployee(employeeId:number) : IAllSchedules[] {
+    let allSchedule = this.AllSchedules.filter(s => s.employeeId === employeeId);
+    return allSchedule; 
   }
 
   currentWeekDays() {
@@ -170,27 +193,44 @@ export class ScheduleComponent implements OnInit {
     // Code to execute when dragging ends
   }
 
-  drop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.schedules, event.previousIndex, event.currentIndex);
-    this.isDragEntered = false; 
-    console.log('drag released' + event.previousIndex + ' ' + event.currentIndex);
+  // drop(event: CdkDragDrop<IAllSchedules[]>) {
+  //   moveItemInArray(this.daysOfTheWeek, event.previousIndex, event.currentIndex);
+  //   this.isDragEntered = false; 
+  //   console.log('drag released' + event.previousIndex + ' ' + event.currentIndex);
+  // }
+
+  drop(event: CdkDragDrop<IAllSchedules[]>) {
+    this.isDragEntered = false;
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex,
+      );
+      let newSchedule = event.container.data; 
+      console.log('event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex,'
+        + ' ' + event.previousContainer.data + ' ' + event.container.data + ' ' + event.previousIndex + ' ' + event.currentIndex);
+    }
   }
   
   onDragReleased(event: CdkDragDrop<any, any, any>) {
-    if (event.previousContainer !== event.container) {
-      // Code to execute when an element is dropped into a different container
-      moveItemInArray(
-        this.schedules, 
-        event.previousIndex, 
-        event.currentIndex);
-    } else {
-      // Code to execute when an element is dropped within the same container
-      moveItemInArray(
-        this.currentWeekDays(),
-        event.previousIndex,
-        event.currentIndex
-      );
-    }
+    // if (event.previousContainer !== event.container) {
+    //   // Code to execute when an element is dropped into a different container
+    //   moveItemInArray(
+    //     this.daysOfTheWeek, 
+    //     event.previousIndex, 
+    //     event.currentIndex);
+    // } else {
+    //   // Code to execute when an element is dropped within the same container
+    //   moveItemInArray(
+    //     this.daysOfTheWeek,
+    //     event.previousIndex,
+    //     event.currentIndex
+    //   );
+    // }
   }
   
 
