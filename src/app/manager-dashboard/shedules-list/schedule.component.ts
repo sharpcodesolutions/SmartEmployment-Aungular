@@ -82,24 +82,11 @@ export class ScheduleComponent implements OnInit {
         this.AllSchedules = allSchedules; 
       });
     });    
-
-    // const _schedules$ = this.scheduleService.GetSchedules(this.startDate, this.endDate);
-
-    // // Use forkJoin to wait for both requests to complete
-    // forkJoin([_employees$, _schedules$]).subscribe(([employees, schedules]) => {
-    //   // Both requests have completed, so you can assign the values and call SchedulesToAllSchedules
-    //   this.employees = employees;
-    //   this.schedules = schedules;
-
-    //   this.AllSchedules = this.scheduleService.SchedulesToAllSchedules(this.schedules, this.employees, this.startDate);
-    // });
-    // this.schedules$.forEach(s => console.log(s));
-    //console.log('the schedules are: ' + this.schedules$);
   }
 
-  getScheduleForEmployee(employeeId:number, i:number) : ISchedule {
-    let schedule = this.schedules.find(s => s.employeeId === employeeId && s.dayIndex === i)!;
-    return schedule; 
+  getScheduleForEmployee(employeeId:number, i:number) : IAllSchedules {
+    let allSchedule = this.AllSchedules.find(s => s.employeeId === employeeId && s.dayIndex === i)!;
+    return allSchedule; 
   }
 
   getAllScheduleForEmployee(employeeId:number) : IAllSchedules[] {
@@ -157,12 +144,12 @@ export class ScheduleComponent implements OnInit {
 
   DeleteSchedule(id:number)
   {
-    // console.log('delete clicked');
-    // this.scheduleService.DeleteSchedule(id).subscribe(() =>{
-    //   this.scheduleService.GetSchedules(this.startDate, this.endDate).subscribe(schedules =>{
-    //     this.schedules = schedules;
-    //   });
-    // });
+    this.scheduleService.DeleteSchedule(id).subscribe(schedules =>{
+      this.scheduleService.GetAllSchedules(this.employees, this.currentWeekDays()[0], this.currentWeekDays()[6]).subscribe(schedules =>{
+        this.AllSchedules = schedules;
+        //this.cdr.detectChanges();
+      });
+    });
   }
 
   UpdateSchedule(schedule:ISchedule)
@@ -177,39 +164,21 @@ export class ScheduleComponent implements OnInit {
 
   AddSchedule(schedule:ISchedule)
   {
-    console.log('add clicked');
     this.scheduleService.AddSchedule(schedule).subscribe(() =>{
       this.scheduleService.GetAllSchedules(this.employees, this.currentWeekDays()[0], this.currentWeekDays()[6]).subscribe(schedules =>{
         this.AllSchedules = schedules;
         //this.cdr.detectChanges();
-        console.log('chagens has been detected'); 
       });
     });
   }
 
   dragEntered() {
     this.isDragEntered = true;
-    console.log('drag entered'); 
   }
 
   dragExited() {
     this.isDragEntered = false; 
-    console.log('drag exited');
   }
-
-  onDragStarted() {
-    // Code to execute when dragging starts
-  }
-  
-  onDragEnded() {
-    // Code to execute when dragging ends
-  }
-
-  // drop(event: CdkDragDrop<IAllSchedules[]>) {
-  //   moveItemInArray(this.daysOfTheWeek, event.previousIndex, event.currentIndex);
-  //   this.isDragEntered = false; 
-  //   console.log('drag released' + event.previousIndex + ' ' + event.currentIndex);
-  // }
 
   drop(event: CdkDragDrop<any>) {
     this.isDragEntered = false;
@@ -237,39 +206,9 @@ export class ScheduleComponent implements OnInit {
         this.AddSchedule(singleSchedule); //.subscribe(s => console.log(s)); 
       }
     }
-  }
+  }  
 
-  // drop(event: CdkDragDrop<any>) {
-  //   if (event.previousContainer === event.container) {
-  //     moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-  //   } else {
-  //     transferArrayItem(event.previousContainer.data,
-  //       event.container.data,
-  //       event.previousIndex,
-  //       event.currentIndex);
-
-  //   }
-  // }
-  
-  onDragReleased(event: CdkDragDrop<any, any, any>) {
-    // if (event.previousContainer !== event.container) {
-    //   // Code to execute when an element is dropped into a different container
-    //   moveItemInArray(
-    //     this.daysOfTheWeek, 
-    //     event.previousIndex, 
-    //     event.currentIndex);
-    // } else {
-    //   // Code to execute when an element is dropped within the same container
-    //   moveItemInArray(
-    //     this.daysOfTheWeek,
-    //     event.previousIndex,
-    //     event.currentIndex
-    //   );
-    // }
-  }
-  
-
-  openDialog(enterAnimationDuration: string, exitAnimationDuration: string, employeeName: string, schedule: ISchedule): void {
+  openDialog(enterAnimationDuration: string, exitAnimationDuration: string, employeeName: string, schedule: IAllSchedules): void {
     const dialogRef = this.dialog.open(DialogAnimationsExampleDialog, {
       width: '250px',
       data: {employeeName: employeeName, schedule: schedule},
@@ -286,7 +225,7 @@ export class ScheduleComponent implements OnInit {
     });
   }
 
-  openEditDialog(enterAnimationDuration: string, exitAnimationDuration: string, employeeName: string, schedule: ISchedule): void {
+  openEditDialog(enterAnimationDuration: string, exitAnimationDuration: string, employeeName: string, schedule: IAllSchedules): void {
     this.scheduleService.populateForm(schedule); 
 
     const dialogRef = this.dialog.open(DialogAnimationsAddEdit, {

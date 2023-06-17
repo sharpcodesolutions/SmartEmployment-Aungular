@@ -78,9 +78,9 @@ export class ScheduleService {
 		return this.http.post<ISchedule>('https://localhost:7197/api/Employees/Schedules', schedule, httpOptions);
 	}
 
-	populateForm(schedule:ISchedule){
-		schedule.startTime = new Date(schedule.startTime);
-		schedule.endTime = new Date(schedule.endTime);
+	populateForm(schedule:IAllSchedules){
+		schedule.startTime = new Date(schedule.startTime!);
+		schedule.endTime = new Date(schedule.endTime!);
 		let start = this.datePipe.transform(schedule.startTime, 'shortTime'); 
 		let end = this.datePipe.transform(schedule.endTime, 'shortTime'); 
 		// schedule.startTime = start; 
