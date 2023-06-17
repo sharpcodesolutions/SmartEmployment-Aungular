@@ -122,18 +122,19 @@ export class EmployeeListComponent implements OnInit {
 
   onDelete(id:number) {
     if(confirm('Are you sure to delete this record?')) {
-      this.employeeService.DeleteEmployee(id).subscribe(res => { console.log('employee deleted successfully'); });
-      this.notificationService.warn('! Deleted succesfully'); 
-      this.employeeService.GetEmployees().subscribe(employees => {
-        this.listData = new MatTableDataSource(employees);
-        this.listData.sort = this.sort!;
-        this.listData.paginator = this.paginator!;
-        // this.listData.filterPredicate = (data, filter) => {
-        //   return this.displayedColumns.some(ele => {
-        //     return ele != 'actions' && data[ele].toLowerCase().indexOf(filter) != -1; 
-        //   })
-        // };
-      })
+      this.employeeService.DeleteEmployee(id).subscribe(res => { 
+        this.employeeService.GetEmployees().subscribe(employees => {
+          this.listData = new MatTableDataSource(employees);
+          this.listData.sort = this.sort!;
+          this.listData.paginator = this.paginator!;
+          // this.listData.filterPredicate = (data, filter) => {
+          //   return this.displayedColumns.some(ele => {
+          //     return ele != 'actions' && data[ele].toLowerCase().indexOf(filter) != -1; 
+          //   })
+          // };
+          this.notificationService.warn('! Deleted succesfully');  
+        })
+      });           
     }
   }
 }
