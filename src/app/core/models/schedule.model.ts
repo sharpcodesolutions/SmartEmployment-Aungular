@@ -14,7 +14,7 @@ export interface ISchedule {
 
 export interface IAllSchedules {
     id:number, 
-    date?:Date,
+    date:Date,
     dayIndex?:number,
     startTime?:Date,
     endTime?:Date, 

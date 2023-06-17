@@ -45,9 +45,9 @@ table .plus.rounded-circle:hover {
     transform: translate(1px,1px);
 }
 
-.card.shadow-sm {
+/* .card.shadow-sm {
     cursor: pointer;
-}
+} */
 
 .card.shadow-sm:hover {
     box-shadow: none;

@@ -8,6 +8,7 @@ import { DatePipe } from '@angular/common';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as moment from 'moment'
 import { IEmployee } from 'src/app/core/models/employee.model';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -44,10 +45,15 @@ export class ScheduleService {
 		});
 	}
 
-	GetSchedules(startDate:Date, endDate:Date):Observable<ISchedule[]>{
+	GetAllSchedules(employees: IEmployee[], startDate: Date, endDate: Date): Observable<IAllSchedules[]> {
 		return this.http.get<ISchedule[]>('https://localhost:7197/api/Employees/schedules/' +
-			this.authService.getCurrUser().username + '/' + 
-			this.datePipe.transform(startDate, "dd%2FMM%2Fyyyy") + '/' + this.datePipe.transform(endDate, "dd%2FMM%2Fyyyy"));
+		  this.authService.getCurrUser().username + '/' +
+		  this.datePipe.transform(startDate, "dd%2FMM%2Fyyyy") + '/' + this.datePipe.transform(endDate, "dd%2FMM%2Fyyyy"))
+		  .pipe(
+			map((schedules: ISchedule[]) => {
+			  return this.SchedulesToAllSchedules(schedules, employees, startDate);
+			})
+		);
 	}
 
 	DeleteSchedule(id:number):Observable<number> {
@@ -92,9 +98,9 @@ export class ScheduleService {
 	getScheduleForEmployee(employeeId:number, i:number, schedules:ISchedule[]) : ISchedule {
 		let schedule = schedules.find(s => s.employeeId === employeeId && s.dayIndex === i)!;
 		return schedule; 
-	  }
+	}
 
-	SchedulesToAllSchedules(schedules:ISchedule[], employees:IEmployee[]) : IAllSchedules[] {
+	SchedulesToAllSchedules(schedules:ISchedule[], employees:IEmployee[], startDate:Date) : IAllSchedules[] {
 		console.log('from inside schedulesToAllSchedules, employee length is: ' + employees.length + ' and schedules length is: '
 			+ schedules.length);
 		let total = employees.length; 
@@ -105,7 +111,7 @@ export class ScheduleService {
 				let schedule = this.getScheduleForEmployee(employees[i].id, day, schedules);
 				if(schedule) {
 					let singleAllSchedule:IAllSchedules = {
-						id:i,
+						id:schedule.id,
 						date:schedule.date,
 						dayIndex:schedule.dayIndex, 
 						startTime:schedule.startTime, 
@@ -120,7 +126,9 @@ export class ScheduleService {
 				}
 				else {
 					let singleAllSchedule:IAllSchedules = {
-						id:i,						
+						id:-1,	
+						date:this.AddDays(startDate,day),	
+						dayIndex:day,				
 						employeeId:employees[i].id, 
 						active:false 
 					}
@@ -130,5 +138,10 @@ export class ScheduleService {
 		}
 
 		return allSchedules; 
+	}
+
+	AddDays(date:Date, days:number):Date {
+		date.setDate(date.getDate() + days);
+		return date;
 	}
 }

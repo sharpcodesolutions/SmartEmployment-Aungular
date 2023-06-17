@@ -31,11 +31,10 @@
                         class="fit justify-content-center align-items-center drag-boundary" 
                         cdkDropList 
                         (cdkDropListDropped)="drop($event)"
-                        [cdkDropListData]="getAllScheduleForEmployee(employee.id)"
+                        [cdkDropListData]="schedule"
                         >  
-                        <div *ngIf="schedule.active; else add" >      
-                            <div class="card shadow-sm" cdkDrag (cdkDragEntered)="dragEntered()" (cdkDragExited)="dragExited()" 
-                                cdkDropListSortingDisabled>
+                        <div *ngIf="schedule.active; else add" class="card shadow-sm" cdkDrag (cdkDragEntered)="dragEntered()" 
+                            (cdkDragExited)="dragExited()" cdkDropListSortingDisabled>     
                                 <div class="d-flex">
                                     <div class="m-1 pencil" style="cursor: pointer"
                                         (click)="openEditDialog('300ms', '150ms', employee.firstname, getScheduleForEmployee(employee.id!, i))">
@@ -45,13 +44,16 @@
                                         (click)="openDialog('300ms', '150ms', employee.firstname, getScheduleForEmployee(employee.id!, i))"> <!-- DeleteSchedule(getScheduleForEmployee(employee.id, i).id)"> -->
                                         <fa-icon [icon]="faTimes"></fa-icon>
                                     </div>
+                                    <div class="float-end m-1 success" cdkDragHandle 
+                                        style="cursor: pointer; position: relative; right: -53px">
+                                        <fa-icon [icon]="faArrows"></fa-icon>
+                                    </div>
                                 </div>                        
                                 <div class="card-header">
                                     <b>{{ datePipe.transform(schedule.startTime, 'shortTime') + ' - ' + 
                                         datePipe.transform(schedule.endTime, 'shortTime') }}</b>
                                     <p>{{ schedule.comments }}</p> 
                                 </div>
-                            </div>
                         </div>
                         <ng-template #add>   
                             <div> 
@@ -60,8 +62,8 @@
                                     <div class="card border-0 bg-transparent">         
                                         <div class="card-body d-flex justify-content-center align-items-center">
                                             <div>  
-                                                <div class="m-1 pt-1 plus rounded-circle shadow-sm">
-                                                    <!-- (click)="openAddDialog('300ms', '150ms', employee.id!, employee.firstname, i, day)"> -->
+                                                <div class="m-1 pt-1 plus rounded-circle shadow-sm"
+                                                    (click)="openAddDialog('300ms', '150ms', employee.id!, employee.firstname, i, currentWeekDays()[schedule.dayIndex!])"> 
                                                     <fa-icon [icon]="faPlus"></fa-icon>
                                                 </div>
                                                 <i class="fa fa-plus" aria-hidden="true"></i>

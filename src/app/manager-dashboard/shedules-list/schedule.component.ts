@@ -1,16 +1,17 @@
 import { DatePipe } from '@angular/common';
-import { Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, Input, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { Observable, map, of, BehaviorSubject } from 'rxjs';
 import { IEmployee } from 'src/app/core/models/employee.model';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { EmployeeService } from '../services/employee.service';
 import { IAllSchedules, ISchedule } from 'src/app/core/models/schedule.model';
 import { ScheduleService } from '../services/schedule.service';
-import { faPencil, faTimes, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPencil, faTimes, faPlus, faArrows } from '@fortawesome/free-solid-svg-icons';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NotifictionService } from '../services/notifiction.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { forkJoin } from 'rxjs';
+import {parse, stringify, toJSON, fromJSON} from 'flatted';
 import {
   CdkDrag,
   CdkDragPlaceholder,
@@ -34,17 +35,19 @@ export class ScheduleComponent implements OnInit {
   //schedules$: Observable<ISchedule[]> = of([]);
   schedules: ISchedule[] = [];
   AllSchedules: IAllSchedules[] = [];
+  allSchedules$: Observable<IAllSchedules[]> = of([]);
   startDate$: BehaviorSubject<Date> = new BehaviorSubject<Date>(new Date());
   endDate$: BehaviorSubject<Date> = new BehaviorSubject<Date>(new Date());
   startDate: Date = new Date(); 
   endDate: Date = new Date(); 
   faTimes = faTimes; 
   faPencil = faPencil;
+  faArrows = faArrows; 
   faPlus = faPlus;
   daysOfTheWeek: Date[] = this.currentWeekDays(); 
   isDragEntered: Boolean = false; 
 
-  constructor(private authService:AuthService, public employeeService:EmployeeService, 
+  constructor(private cdr: ChangeDetectorRef, private authService:AuthService, public employeeService:EmployeeService, 
     public scheduleService:ScheduleService, public datePipe:DatePipe, public dialog: MatDialog)
   {
 
@@ -72,17 +75,24 @@ export class ScheduleComponent implements OnInit {
     //   this.schedules = schedules; 
     //   this.AllSchedules = this.scheduleService.SchedulesToAllSchedules(schedules, this.employees);
     // });
-    const _employees$ = this.employeeService.GetEmployees();
-    const _schedules$ = this.scheduleService.GetSchedules(this.startDate, this.endDate);
+    this.employeeService.GetEmployees().subscribe(employees => {
+      this.allSchedules$ = this.scheduleService.GetAllSchedules(employees, this.startDate, this.endDate); 
+      this.employees = employees; 
+      this.scheduleService.GetAllSchedules(employees, this.startDate, this.endDate).subscribe(allSchedules => {
+        this.AllSchedules = allSchedules; 
+      });
+    });    
 
-    // Use forkJoin to wait for both requests to complete
-    forkJoin([_employees$, _schedules$]).subscribe(([employees, schedules]) => {
-      // Both requests have completed, so you can assign the values and call SchedulesToAllSchedules
-      this.employees = employees;
-      this.schedules = schedules;
+    // const _schedules$ = this.scheduleService.GetSchedules(this.startDate, this.endDate);
 
-      this.AllSchedules = this.scheduleService.SchedulesToAllSchedules(this.schedules, this.employees);
-    });
+    // // Use forkJoin to wait for both requests to complete
+    // forkJoin([_employees$, _schedules$]).subscribe(([employees, schedules]) => {
+    //   // Both requests have completed, so you can assign the values and call SchedulesToAllSchedules
+    //   this.employees = employees;
+    //   this.schedules = schedules;
+
+    //   this.AllSchedules = this.scheduleService.SchedulesToAllSchedules(this.schedules, this.employees, this.startDate);
+    // });
     // this.schedules$.forEach(s => console.log(s));
     //console.log('the schedules are: ' + this.schedules$);
   }
@@ -139,28 +149,28 @@ export class ScheduleComponent implements OnInit {
     return days;
   }
 
-  addDays(date: Date, days: number): Date {
-    const day = date; 
-    day.setDate(date.getDate() + days);
-    return day;
-  }
+  // addDays(date: Date, days: number): Date {
+  //   const day = date; 
+  //   day.setDate(date.getDate() + days);
+  //   return day;
+  // }
 
   DeleteSchedule(id:number)
   {
-    console.log('delete clicked');
-    this.scheduleService.DeleteSchedule(id).subscribe(() =>{
-      this.scheduleService.GetSchedules(this.startDate, this.endDate).subscribe(schedules =>{
-        this.schedules = schedules;
-      });
-    });
+    // console.log('delete clicked');
+    // this.scheduleService.DeleteSchedule(id).subscribe(() =>{
+    //   this.scheduleService.GetSchedules(this.startDate, this.endDate).subscribe(schedules =>{
+    //     this.schedules = schedules;
+    //   });
+    // });
   }
 
   UpdateSchedule(schedule:ISchedule)
   {
     console.log('update clicked');
     this.scheduleService.UpdateSchedule(schedule).subscribe(() =>{
-      this.scheduleService.GetSchedules(this.startDate, this.endDate).subscribe(schedules =>{
-        this.schedules = schedules;
+      this.scheduleService.GetAllSchedules(this.employees, this.startDate, this.endDate).subscribe(schedules =>{
+        this.AllSchedules = schedules;
       });
     });
   }
@@ -169,8 +179,10 @@ export class ScheduleComponent implements OnInit {
   {
     console.log('add clicked');
     this.scheduleService.AddSchedule(schedule).subscribe(() =>{
-      this.scheduleService.GetSchedules(this.startDate, this.endDate).subscribe(schedules =>{
-        this.schedules = schedules;
+      this.scheduleService.GetAllSchedules(this.employees, this.currentWeekDays()[0], this.currentWeekDays()[6]).subscribe(schedules =>{
+        this.AllSchedules = schedules;
+        //this.cdr.detectChanges();
+        console.log('chagens has been detected'); 
       });
     });
   }
@@ -199,22 +211,45 @@ export class ScheduleComponent implements OnInit {
   //   console.log('drag released' + event.previousIndex + ' ' + event.currentIndex);
   // }
 
-  drop(event: CdkDragDrop<IAllSchedules[]>) {
+  drop(event: CdkDragDrop<any>) {
     this.isDragEntered = false;
     if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      // moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex,
-      );
-      let newSchedule = event.container.data; 
-      console.log('event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex,'
-        + ' ' + event.previousContainer.data + ' ' + event.container.data + ' ' + event.previousIndex + ' ' + event.currentIndex);
+      // transferArrayItem(
+      //   event.previousContainer.data,
+      //   event.container.data,
+      //   event.previousIndex,
+      //   event.currentIndex,
+      // );
+      if(!event.container.data.active) {
+        let singleSchedule:ISchedule = {
+          id:0,
+          date:this.currentWeekDays()[event.container.data.dayIndex],
+          dayIndex:event.container.data.dayIndex, 
+          startTime:event.previousContainer.data.startTime, 
+          endTime:event.previousContainer.data.endTime, 
+          hours:event.previousContainer.data.hours, 
+          comments:event.previousContainer.data.comments, 
+          employeeId:event.container.data.employeeId, 
+          taskId:event.previousContainer.data.taskId,
+        }
+        this.AddSchedule(singleSchedule); //.subscribe(s => console.log(s)); 
+      }
     }
   }
+
+  // drop(event: CdkDragDrop<any>) {
+  //   if (event.previousContainer === event.container) {
+  //     moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+  //   } else {
+  //     transferArrayItem(event.previousContainer.data,
+  //       event.container.data,
+  //       event.previousIndex,
+  //       event.currentIndex);
+
+  //   }
+  // }
   
   onDragReleased(event: CdkDragDrop<any, any, any>) {
     // if (event.previousContainer !== event.container) {
@@ -261,8 +296,9 @@ export class ScheduleComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.scheduleService.GetSchedules(this.startDate, this.endDate).subscribe(schedules => {
-        this.schedules = schedules; 
+      this.scheduleService.GetAllSchedules(this.employees, this.currentWeekDays()[0], this.currentWeekDays()[6]).subscribe(schedules =>{
+        this.AllSchedules = schedules;
+        //this.cdr.detectChanges(); 
       });
     });
   }
@@ -278,8 +314,9 @@ export class ScheduleComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.scheduleService.GetSchedules(this.startDate, this.endDate).subscribe(schedules => {
-        this.schedules = schedules; 
+      this.scheduleService.GetAllSchedules(this.employees, this.currentWeekDays()[0], this.currentWeekDays()[6]).subscribe(schedules =>{
+        this.AllSchedules = schedules;
+        //this.cdr.detectChanges(); 
       });
     });
   }
