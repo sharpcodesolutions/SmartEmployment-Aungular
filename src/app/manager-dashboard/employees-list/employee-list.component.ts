@@ -40,11 +40,13 @@ export class EmployeeListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log('from emplyee-list onInit');
     this.employeeService.GetEmployees().subscribe(employees => {
       this.listData = new MatTableDataSource(employees);
       this.sort?.sort(({ id: 'firstname', start: 'asc'}) as MatSortable);
       this.listData.sort = this.sort!;
       this.listData.paginator = this.paginator!;
+      this.employees = employees; 
       // this.listData.filterPredicate = (data, filter) => {
       //   return this.displayedColumns.some(ele => {
       //     return ele != 'actions' && data[ele].toLowerCase().indexOf(filter) != -1; 
@@ -80,14 +82,7 @@ export class EmployeeListComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {      
       console.log('The dialog was closed' + result);
       this.employeeService.GetEmployees().subscribe(employees => {
-        this.listData = new MatTableDataSource(employees);
-        this.listData.sort = this.sort!;
-        this.listData.paginator = this.paginator!;
-        // this.listData.filterPredicate = (data, filter) => {
-        //   return this.displayedColumns.some(ele => {
-        //     return ele != 'actions' && data[ele].toLowerCase().indexOf(filter) != -1; 
-        //   })
-        // };
+        this.employees = employees; 
       })
     });
   }

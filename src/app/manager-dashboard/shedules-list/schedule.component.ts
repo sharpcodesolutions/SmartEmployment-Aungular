@@ -29,8 +29,10 @@ import * as moment from 'moment';
 })
 export class ScheduleComponent implements OnInit {
   isUserAuthenticated: boolean = false;
+  _employees: BehaviorSubject<IEmployee[]> = new BehaviorSubject<IEmployee[]>([]);
+
   employees$: Observable<IEmployee[]> = of([]);
-  employees: IEmployee[] = [];
+  //employees: IEmployee[] = [];
   total$: Observable<number> = of(0);
   //schedules$: Observable<ISchedule[]> = of([]);
   schedules: ISchedule[] = [];
@@ -50,7 +52,7 @@ export class ScheduleComponent implements OnInit {
   constructor(private cdr: ChangeDetectorRef, private authService:AuthService, public employeeService:EmployeeService, 
     public scheduleService:ScheduleService, public datePipe:DatePipe, public dialog: MatDialog)
   {
-
+    this.employees$ = this._employees.asObservable();
   }
 
   ngOnInit(): void {
@@ -60,7 +62,8 @@ export class ScheduleComponent implements OnInit {
       this.isUserAuthenticated = res;
     });
     this.employeeService.GetEmployees().subscribe(employees => {
-      this.employees = employees; 
+      //this.employees = employees; 
+      this._employees.next(employees);
     });
 
     this.employees$ = this.employeeService.employees$;
@@ -77,7 +80,8 @@ export class ScheduleComponent implements OnInit {
     // });
     this.employeeService.GetEmployees().subscribe(employees => {
       this.allSchedules$ = this.scheduleService.GetAllSchedules(employees, this.startDate, this.endDate); 
-      this.employees = employees; 
+      //this.employees = employees; 
+      //this.employees$ = employees.asObservable(); 
       this.scheduleService.GetAllSchedules(employees, this.startDate, this.endDate).subscribe(allSchedules => {
         this.AllSchedules = allSchedules; 
       });
@@ -145,7 +149,7 @@ export class ScheduleComponent implements OnInit {
   DeleteSchedule(id:number)
   {
     this.scheduleService.DeleteSchedule(id).subscribe(schedules =>{
-      this.scheduleService.GetAllSchedules(this.employees, this.currentWeekDays()[0], this.currentWeekDays()[6]).subscribe(schedules =>{
+      this.scheduleService.GetAllSchedules(this._employees.getValue(), this.currentWeekDays()[0], this.currentWeekDays()[6]).subscribe(schedules =>{
         this.AllSchedules = schedules;
         //this.cdr.detectChanges();
       });
@@ -156,7 +160,7 @@ export class ScheduleComponent implements OnInit {
   {
     console.log('update clicked');
     this.scheduleService.UpdateSchedule(schedule).subscribe(() =>{
-      this.scheduleService.GetAllSchedules(this.employees, this.startDate, this.endDate).subscribe(schedules =>{
+      this.scheduleService.GetAllSchedules(this._employees.getValue(), this.startDate, this.endDate).subscribe(schedules =>{
         this.AllSchedules = schedules;
       });
     });
@@ -165,7 +169,7 @@ export class ScheduleComponent implements OnInit {
   AddSchedule(schedule:ISchedule)
   {
     this.scheduleService.AddSchedule(schedule).subscribe(() =>{
-      this.scheduleService.GetAllSchedules(this.employees, this.currentWeekDays()[0], this.currentWeekDays()[6]).subscribe(schedules =>{
+      this.scheduleService.GetAllSchedules(this._employees.getValue(), this.currentWeekDays()[0], this.currentWeekDays()[6]).subscribe(schedules =>{
         this.AllSchedules = schedules;
         //this.cdr.detectChanges();
       });
@@ -235,7 +239,7 @@ export class ScheduleComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.scheduleService.GetAllSchedules(this.employees, this.currentWeekDays()[0], this.currentWeekDays()[6]).subscribe(schedules =>{
+      this.scheduleService.GetAllSchedules(this._employees.getValue(), this.currentWeekDays()[0], this.currentWeekDays()[6]).subscribe(schedules =>{
         this.AllSchedules = schedules;
         //this.cdr.detectChanges(); 
       });
@@ -253,7 +257,7 @@ export class ScheduleComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.scheduleService.GetAllSchedules(this.employees, this.currentWeekDays()[0], this.currentWeekDays()[6]).subscribe(schedules =>{
+      this.scheduleService.GetAllSchedules(this._employees.getValue(), this.currentWeekDays()[0], this.currentWeekDays()[6]).subscribe(schedules =>{
         this.AllSchedules = schedules;
         //this.cdr.detectChanges(); 
       });

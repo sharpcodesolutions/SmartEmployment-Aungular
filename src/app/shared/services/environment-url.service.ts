@@ -4,6 +4,6 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class EnvironmentUrlService {
-  public urlAddress: string = 'https://localhost:7132';
+  public urlAddress: string = 'https://smartemployment-authentication-api.azure-api.net/auth';
   constructor() { }
 }

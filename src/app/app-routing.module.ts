@@ -27,7 +27,7 @@ const routes: Routes = [
   { path: 'schedule', component: ScheduleComponent, canActivate: [ManagerGuardGuard], children:[
   ]},
   { path: 'employee', component: EmployeeComponent},
-  { path: '**', redirectTo: 'mamanger', pathMatch: 'full' },
+  { path: '**', component: PageNotFoundComponent},
 ];
 
 @NgModule({
