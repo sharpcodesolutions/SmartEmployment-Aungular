@@ -24,7 +24,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
-import { DialogAnimationsExampleDialog } from './shedules-list/schedule.component';
+import { DialogAnimationsConfirm } from './shedules-list/schedule.component';
 import { DialogAnimationsAddEdit } from './shedules-list/schedule.component';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -38,7 +38,7 @@ import { ScheduleComponent } from './shedules-list/schedule.component';
     EmployeeListComponent,
     ScheduleComponent,
     ManagerComponent, 
-    DialogAnimationsExampleDialog, 
+    DialogAnimationsConfirm, 
     DialogAnimationsAddEdit
   ],
   imports: [

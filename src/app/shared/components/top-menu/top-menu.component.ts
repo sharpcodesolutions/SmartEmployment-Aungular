@@ -36,7 +36,6 @@ export class TopMenuComponent implements OnInit {
     
     this.authService.authRoleChanged.subscribe(res => {
       this.userRoles = res;
-      console.log('userRole is subscribed');
     });
   }
 

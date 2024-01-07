@@ -21,6 +21,7 @@ export class LoginComponent implements OnInit {
    loginForm!: FormGroup;
    errorMessage: string = '';
    showError: boolean = false;
+   isLoading: boolean = false;
 
    constructor(private authService : AuthService, private router : Router, private route: ActivatedRoute) { }
 
@@ -40,6 +41,7 @@ export class LoginComponent implements OnInit {
    }
     
    loginUser = (loginFormValue : any) => {
+      this.isLoading = true;
       this.showError = false;
       const login = {... loginFormValue };
       const userForAuth: UserForAuthenticationDto = {
@@ -49,24 +51,23 @@ export class LoginComponent implements OnInit {
       }
 
       this.authService.loginUser('api/Accounts/Login', userForAuth)
-         .subscribe({
-            next: (res:AuthResponseDto) => {
-               localStorage.setItem("token", res.token);
-               let user:User = {username: userForAuth.email, token: res.token}; 
-               localStorage.setItem("user", JSON.stringify(user)); 
-               let roles = JSON.parse(window.atob(res.token.split('.')[1]))["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
-               roles = String(roles).split(','); 
-               console.log('the token is: ' + roles);
-               roles = String(roles).split(',');
-               console.log('user at login is: ' + JSON.stringify(user));
-               console.log('isManager at loginn is: ' + (roles.indexOf('Manager') !== -1));
-               this.authService.sendAuthStateChangeNotification(res.isAuthSuccessful, user, roles);
-               this.router.navigate([this.returnUrl]);
-            },
-            error: (err: HttpErrorResponse) => {
-               this.errorMessage = err.message;
-               this.showError = true;
-            }
-         })
+      .subscribe({
+         next: (res:AuthResponseDto) => {
+            localStorage.setItem("token", res.token);
+            let user:User = {username: userForAuth.email, token: res.token}; 
+            localStorage.setItem("user", JSON.stringify(user)); 
+            let roles = JSON.parse(window.atob(res.token.split('.')[1]))["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
+            roles = String(roles).split(','); 
+            roles = String(roles).split(',');
+            this.authService.sendAuthStateChangeNotification(res.isAuthSuccessful, user, roles);
+            this.router.navigate([this.returnUrl]);
+            this.isLoading = false;
+         },
+         error: (err: HttpErrorResponse) => {
+            this.errorMessage = err.message;
+            this.showError = true;
+            this.isLoading = false;
+         }
+      })
    }
 }

@@ -25,7 +25,6 @@ import {ViewEncapsulation} from '@angular/core';
 export class EmployeeListComponent implements OnInit {
   isUserAuthenticated: boolean = false;
 
-  employees:IEmployee[]=[];
   listData: MatTableDataSource<any> = new MatTableDataSource<any>();
   displayedColumns: string[] = ['id', 'firstname', 'lastname', 'employeeCode', 'employeeEmail', 'startDate', 'terminationDate', 'birthDate', 'actions'];
   @ViewChild(MatSort) 
@@ -33,6 +32,7 @@ export class EmployeeListComponent implements OnInit {
   @ViewChild(MatPaginator)
   paginator?: MatPaginator;
   searchKey: string = '';
+  loaded: boolean = false; 
 
   constructor(public employeeService: EmployeeService, private dialog: MatDialog, private notificationService: NotifictionService) {
     // this.employees$ = employeeService.employees$;
@@ -40,19 +40,17 @@ export class EmployeeListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('from emplyee-list onInit');
+    this.getAllEmployees(); 
+  }
+
+  getAllEmployees() {
+    this.loaded = false;
     this.employeeService.GetEmployees().subscribe(employees => {
       this.listData = new MatTableDataSource(employees);
-      this.sort?.sort(({ id: 'firstname', start: 'asc'}) as MatSortable);
       this.listData.sort = this.sort!;
       this.listData.paginator = this.paginator!;
-      this.employees = employees; 
-      // this.listData.filterPredicate = (data, filter) => {
-      //   return this.displayedColumns.some(ele => {
-      //     return ele != 'actions' && data[ele].toLowerCase().indexOf(filter) != -1; 
-      //   })
-      // };
-    })
+      this.loaded = true;
+    });
   }
 
   onSearchClear() {
@@ -70,20 +68,8 @@ export class EmployeeListComponent implements OnInit {
     dialogConfig.disableClose = true; 
     dialogConfig.autoFocus = true; 
     dialogConfig.width = '60%'; 
-    // this.dialog.open(EmployeeComponent, dialogConfig);
-
-    const dialogRef = this.dialog.open(EmployeeComponent, {
-      width: '60%',
-      disableClose: true
-    });
-
-    console.log('are we hitting this?'); 
-
-    dialogRef.afterClosed().subscribe(result => {      
-      console.log('The dialog was closed' + result);
-      this.employeeService.GetEmployees().subscribe(employees => {
-        this.employees = employees; 
-      })
+    this.dialog.open(EmployeeComponent, dialogConfig).afterClosed().subscribe(result => {      
+      this.getAllEmployees();
     });
   }
 
@@ -93,43 +79,22 @@ export class EmployeeListComponent implements OnInit {
     dialogConfig.disableClose = true; 
     dialogConfig.autoFocus = true; 
     dialogConfig.width = '60%'; 
-    // this.dialog.open(EmployeeComponent, dialogConfig);
-
-    const dialogRef = this.dialog.open(EmployeeComponent, {
-      width: '60%', 
-      disableClose: true
-    });
-
-    dialogRef.afterClosed().subscribe(result => {      
-      console.log('The dialog was closed' + result);
-      this.employeeService.GetEmployees().subscribe(employees => {
-        this.listData = new MatTableDataSource(employees);
-        this.listData.sort = this.sort!;
-        this.listData.paginator = this.paginator!;
-        // this.listData.filterPredicate = (data, filter) => {
-        //   return this.displayedColumns.some(ele => {
-        //     return ele != 'actions' && data[ele].toLowerCase().indexOf(filter) != -1; 
-        //   })
-        // };
-      })
+    this.dialog.open(EmployeeComponent, dialogConfig).afterClosed().subscribe(result => {      
+      this.getAllEmployees();
     });
   }
 
   onDelete(id:number) {
+    this.loaded = false; 
     if(confirm('Are you sure to delete this record?')) {
       this.employeeService.DeleteEmployee(id).subscribe(res => { 
-        this.employeeService.GetEmployees().subscribe(employees => {
-          this.listData = new MatTableDataSource(employees);
-          this.listData.sort = this.sort!;
-          this.listData.paginator = this.paginator!;
-          // this.listData.filterPredicate = (data, filter) => {
-          //   return this.displayedColumns.some(ele => {
-          //     return ele != 'actions' && data[ele].toLowerCase().indexOf(filter) != -1; 
-          //   })
-          // };
-          this.notificationService.warn('! Deleted succesfully');  
-        })
+        this.getAllEmployees();
+        this.notificationService.warn('! Deleted succesfully');  
+        this.loaded = true;
       });           
+    }
+    else {
+      this.loaded = true; 
     }
   }
 }

@@ -14,7 +14,6 @@ export class AppComponent {
   constructor(private _authService: AuthService) {}
 
   ngOnInit() {
-   console.log('authChanged from app: ' + this._authService.authChanged);
   }
 
   get authService() : AuthService {

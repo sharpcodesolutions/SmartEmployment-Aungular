@@ -9,6 +9,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as moment from 'moment'
 import { IEmployee } from 'src/app/core/models/employee.model';
 import { map } from 'rxjs/operators';
+import { EnvironmentUrlService } from 'src/app/shared/services/environment-url.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ import { map } from 'rxjs/operators';
 
 export class ScheduleService {
 
-  	constructor(private authService: AuthService, private http: HttpClient, private datePipe:DatePipe) { 
+  	constructor(private authService: AuthService, private http: HttpClient, private datePipe:DatePipe, private envUrl: EnvironmentUrlService) { 
   	}
 
 	form: FormGroup = new FormGroup({ 
@@ -46,9 +47,9 @@ export class ScheduleService {
 	}
 
 	GetAllSchedules(employees: IEmployee[], startDate: Date, endDate: Date): Observable<IAllSchedules[]> {
-		return this.http.get<ISchedule[]>('https://localhost:7197/api/Employees/schedules/' +
+		return this.http.get<ISchedule[]>(this.envUrl.urlAPISchedules +
 		  this.authService.getCurrUser().username + '/' +
-		  this.datePipe.transform(startDate, "dd%2FMM%2Fyyyy") + '/' + this.datePipe.transform(endDate, "dd%2FMM%2Fyyyy"))
+		  this.datePipe.transform(startDate, "dd-MM-yyyy") + '/' + this.datePipe.transform(endDate, "dd-MM-yyyy"))
 		  .pipe(
 			map((schedules: ISchedule[]) => {
 			  return this.SchedulesToAllSchedules(schedules, employees, startDate);
@@ -57,7 +58,7 @@ export class ScheduleService {
 	}
 
 	DeleteSchedule(id:number):Observable<number> {
-		return this.http.delete<number>('https://localhost:7197/api/Employees/Schedules/' + id);
+		return this.http.delete<number>(this.envUrl.urlAPISchedules + id);
 	} 
 
 	UpdateSchedule(schedule:ISchedule):Observable<number> {
@@ -66,7 +67,7 @@ export class ScheduleService {
 			  'Content-Type':  'application/json',
 			})
 		};
-		return this.http.put<number>('https://localhost:7197/api/Employees/Schedules', schedule, httpOptions);
+		return this.http.put<number>(this.envUrl.urlAPISchedules, schedule, httpOptions);
 	}
 
 	AddSchedule(schedule: ISchedule): Observable<ISchedule> {
@@ -75,7 +76,7 @@ export class ScheduleService {
 			  'Content-Type':  'application/json',
 			})
 		};
-		return this.http.post<ISchedule>('https://localhost:7197/api/Employees/Schedules', schedule, httpOptions);
+		return this.http.post<ISchedule>(this.envUrl.urlAPISchedules, schedule, httpOptions);
 	}
 
 	populateForm(schedule:IAllSchedules){
@@ -101,8 +102,6 @@ export class ScheduleService {
 	}
 
 	SchedulesToAllSchedules(schedules:ISchedule[], employees:IEmployee[], startDate:Date) : IAllSchedules[] {
-		console.log('from inside schedulesToAllSchedules, employee length is: ' + employees.length + ' and schedules length is: '
-			+ schedules.length);
 		let total = employees.length; 
 		let allSchedules:IAllSchedules[] = [];
 		for(var i=0; i<total; i++) {

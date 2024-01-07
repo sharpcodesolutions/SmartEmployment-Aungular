@@ -43,7 +43,7 @@ export class AuthService {
    }
 
    public loginUser = (route: string, body: UserForAuthenticationDto) => {
-      return this.http.post<AuthResponseDto>(this.createCompleteRoute(route, this.envUrl.urlAddress), body);
+      return this.http.post<AuthResponseDto>(this.createCompleteRoute(route, this.envUrl.urlAuthAddress), body);
    }
 
    public logout = () => {

@@ -31,8 +31,8 @@ export class ScheduleComponent implements OnInit {
   isUserAuthenticated: boolean = false;
   _employees: BehaviorSubject<IEmployee[]> = new BehaviorSubject<IEmployee[]>([]);
 
-  employees$: Observable<IEmployee[]> = of([]);
   //employees: IEmployee[] = [];
+  employees$: Observable<IEmployee[]> = of([]);
   total$: Observable<number> = of(0);
   //schedules$: Observable<ISchedule[]> = of([]);
   schedules: ISchedule[] = [];
@@ -48,44 +48,48 @@ export class ScheduleComponent implements OnInit {
   faPlus = faPlus;
   daysOfTheWeek: Date[] = this.currentWeekDays(); 
   isDragEntered: Boolean = false; 
+  loaded: boolean = false;
 
   constructor(private cdr: ChangeDetectorRef, private authService:AuthService, public employeeService:EmployeeService, 
     public scheduleService:ScheduleService, public datePipe:DatePipe, public dialog: MatDialog)
   {
-    this.employees$ = this._employees.asObservable();
   }
 
   ngOnInit(): void {
-    console.log('from the schedule list');
-    this.isUserAuthenticated = this.authService.isAuthenticated(); 
-    this.authService.authChanged.subscribe(res => {
-      this.isUserAuthenticated = res;
-    });
-    this.employeeService.GetEmployees().subscribe(employees => {
-      //this.employees = employees; 
-      this._employees.next(employees);
-    });
+    this.initialiseData();   
+  }
 
+  initialiseData() {
+    this.loaded = false; 
+    let endDateLoaded = false; 
+    let startDateLoaded = false; 
+    let scheduleLoaded = false; 
     this.employees$ = this.employeeService.employees$;
     this.total$ = this.employeeService.total$; 
     this.startDate$.next(this.currentWeekDays()[0]);
     this.endDate$.next(this.currentWeekDays()[6]); 
-    this.startDate$.subscribe(date => this.startDate = date); 
-    this.endDate$.subscribe(date => this.endDate = date); 
-    //this.schedules$ = this.scheduleService.GetSchedules(this.startDate, this.endDate);
+    
+    this.startDate$.subscribe(date => {
+      this.startDate = date;
+      startDateLoaded = true; 
+      this.loaded = endDateLoaded && startDateLoaded && scheduleLoaded; 
+    }); 
 
-    // this.scheduleService.GetSchedules(this.startDate, this.endDate).subscribe(schedules => {
-    //   this.schedules = schedules; 
-    //   this.AllSchedules = this.scheduleService.SchedulesToAllSchedules(schedules, this.employees);
-    // });
+    this.endDate$.subscribe(date => {
+      this.endDate = date;
+      endDateLoaded = true; 
+      this.loaded = endDateLoaded && startDateLoaded && scheduleLoaded;
+    }); 
+
     this.employeeService.GetEmployees().subscribe(employees => {
+      this._employees.next(employees);
       this.allSchedules$ = this.scheduleService.GetAllSchedules(employees, this.startDate, this.endDate); 
-      //this.employees = employees; 
-      //this.employees$ = employees.asObservable(); 
       this.scheduleService.GetAllSchedules(employees, this.startDate, this.endDate).subscribe(allSchedules => {
         this.AllSchedules = allSchedules; 
+        scheduleLoaded = true;
+        this.loaded = endDateLoaded && startDateLoaded && scheduleLoaded;
       });
-    });    
+    });  
   }
 
   getScheduleForEmployee(employeeId:number, i:number) : IAllSchedules {
@@ -149,30 +153,14 @@ export class ScheduleComponent implements OnInit {
   DeleteSchedule(id:number)
   {
     this.scheduleService.DeleteSchedule(id).subscribe(schedules =>{
-      this.scheduleService.GetAllSchedules(this._employees.getValue(), this.currentWeekDays()[0], this.currentWeekDays()[6]).subscribe(schedules =>{
-        this.AllSchedules = schedules;
-        //this.cdr.detectChanges();
-      });
-    });
-  }
-
-  UpdateSchedule(schedule:ISchedule)
-  {
-    console.log('update clicked');
-    this.scheduleService.UpdateSchedule(schedule).subscribe(() =>{
-      this.scheduleService.GetAllSchedules(this._employees.getValue(), this.startDate, this.endDate).subscribe(schedules =>{
-        this.AllSchedules = schedules;
-      });
+      this.initialiseData(); 
     });
   }
 
   AddSchedule(schedule:ISchedule)
   {
     this.scheduleService.AddSchedule(schedule).subscribe(() =>{
-      this.scheduleService.GetAllSchedules(this._employees.getValue(), this.currentWeekDays()[0], this.currentWeekDays()[6]).subscribe(schedules =>{
-        this.AllSchedules = schedules;
-        //this.cdr.detectChanges();
-      });
+      this.initialiseData(); 
     });
   }
 
@@ -189,12 +177,6 @@ export class ScheduleComponent implements OnInit {
     if (event.previousContainer === event.container) {
       // moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
-      // transferArrayItem(
-      //   event.previousContainer.data,
-      //   event.container.data,
-      //   event.previousIndex,
-      //   event.currentIndex,
-      // );
       if(!event.container.data.active) {
         let singleSchedule:ISchedule = {
           id:0,
@@ -213,18 +195,15 @@ export class ScheduleComponent implements OnInit {
   }  
 
   openDialog(enterAnimationDuration: string, exitAnimationDuration: string, employeeName: string, schedule: IAllSchedules): void {
-    const dialogRef = this.dialog.open(DialogAnimationsExampleDialog, {
+    const dialogRef = this.dialog.open(DialogAnimationsConfirm, {
       width: '250px',
       data: {employeeName: employeeName, schedule: schedule},
       enterAnimationDuration,
       exitAnimationDuration,
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
+    }).afterClosed().subscribe(result => {
       if(result)
       {
-        console.log('The dialog was closed' + result);
-        this.DeleteSchedule(result.id);
+        this.DeleteSchedule(result.id)
       }
     });
   }
@@ -232,35 +211,25 @@ export class ScheduleComponent implements OnInit {
   openEditDialog(enterAnimationDuration: string, exitAnimationDuration: string, employeeName: string, schedule: IAllSchedules): void {
     this.scheduleService.populateForm(schedule); 
 
-    const dialogRef = this.dialog.open(DialogAnimationsAddEdit, {
+    this.dialog.open(DialogAnimationsAddEdit, {
       width: '300px',
       enterAnimationDuration,
       exitAnimationDuration,
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      this.scheduleService.GetAllSchedules(this._employees.getValue(), this.currentWeekDays()[0], this.currentWeekDays()[6]).subscribe(schedules =>{
-        this.AllSchedules = schedules;
-        //this.cdr.detectChanges(); 
-      });
+    }).afterClosed().subscribe(result => {
+      this.initialiseData();
     });
   }
 
   openAddDialog(enterAnimationDuration: string, exitAnimationDuration: string, employeeId: number, employeeName: string, dayIndex: number, date: Date): void {
     this.scheduleService.initialiseFormGroup(date, dayIndex, employeeId); 
 
-    const dialogRef = this.dialog.open(DialogAnimationsAddEdit, {
+    this.dialog.open(DialogAnimationsAddEdit, {
       width: '300px',
       disableClose: true, 
       enterAnimationDuration,
       exitAnimationDuration
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      this.scheduleService.GetAllSchedules(this._employees.getValue(), this.currentWeekDays()[0], this.currentWeekDays()[6]).subscribe(schedules =>{
-        this.AllSchedules = schedules;
-        //this.cdr.detectChanges(); 
-      });
+    }).afterClosed().subscribe(result => {
+      this.initialiseData();
     });
   }
 }
@@ -271,67 +240,66 @@ export interface IDialogData {
 }
 
 @Component({
-  selector: 'dialog-animations-example-dialog',
-  templateUrl: './dialog-animations-example-dialog.html',
+  selector: 'dialog-animations-confirm',
+  templateUrl: './dialog-animations-confirm.html',
 })
-export class DialogAnimationsExampleDialog {
+export class DialogAnimationsConfirm {
 
-  constructor(public dialogRef: MatDialogRef<DialogAnimationsExampleDialog>, @Inject(MAT_DIALOG_DATA) public data: IDialogData) {
+  constructor(public dialogRef: MatDialogRef<DialogAnimationsAddEdit>, @Inject(MAT_DIALOG_DATA) public data: IDialogData) {
     dialogRef.disableClose = true;
   }
 
   onClose() {
-    console.log('close clicked');
     this.dialogRef.close();
   }
 
   onOk() {
-    console.log('ok clicked');
     this.dialogRef.close();
   }
 }
 
 @Component({
-  selector: 'dialog-animations-add',
-  templateUrl: './dialog-animations-add.html',
+  selector: 'dialog-animations-add-edit',
+  templateUrl: './dialog-animations-add-edit.html',
   styleUrls: ['./schedule.component.css']
 })
 export class DialogAnimationsAddEdit implements OnInit {
-
+  isSaving: boolean = false; 
   constructor(private notificationService:NotifictionService, public scheduleService:ScheduleService, 
     public dialogRef: MatDialogRef<DialogAnimationsAddEdit>) {
     dialogRef.disableClose = true;
   }
 
   ngOnInit(): void {
-    // this.data.startTime = this.data.schedule.startTime.toString(); 
-    // this.data.endTime = this.data.schedule.endTime.toString(); 
   }
 
   onSubmit() {
-    console.log('the value is: ' + this.scheduleService.form.value.startTime);
     if(this.scheduleService.form.valid) {
+      this.isSaving = true; 
       if(this.scheduleService.form.get('id')?.value === 0)
       {
         const schedule:ISchedule = this.scheduleService.form.value;   
         schedule.startTime = moment.utc(schedule.startTime, ["h:mm A"]).toDate();
         schedule.endTime = moment.utc(schedule.endTime, ["h:mm A"]).toDate();
-        this.scheduleService.AddSchedule(schedule).subscribe(s => console.log('schedule created successfully'));
+        this.scheduleService.AddSchedule(schedule).subscribe(s => {
+          this.scheduleService.form.reset();
+          this.notificationService.success('Schedule created successfully');
+          this.isSaving = false;
+          this.onClose(); 
+        });
       }
       else 
       {
         const schedule:ISchedule = this.scheduleService.form.value;
         schedule.startTime = moment.utc(schedule.startTime, ["h:mm A"]).toDate(); 
         schedule.endTime = moment.utc(schedule.endTime, ["h:mm A"]).toDate();
-        this.scheduleService.UpdateSchedule(schedule).subscribe(s => console.log('schedule updated successfully'));
+        this.scheduleService.UpdateSchedule(schedule).subscribe(s => {
+          this.scheduleService.form.reset();
+          this.notificationService.success('Schedule updated successfully');
+          this.isSaving = false;
+          this.onClose(); 
+        });
       }
-
-      console.log('the form is valid');
-      
-      this.scheduleService.form.reset();
-      // this.scheduleService.initialiseFormGroup();
-      this.notificationService.success('Schedule created successfully');
-      this.onClose(); 
     }
   }
 

@@ -34,7 +34,7 @@ export class DropdownComponent implements OnInit {
         this.userRoles = this.authService.getRoles();         
         this.authService.authRoleChanged.subscribe(res => {
             this.userRoles = res;
-            console.log('userRole is subscribed');
+            this.roles = []; 
             if(this.userRoles && this.userRoles.length != 0) {
                 if(this.userRoles.indexOf('Employee') !== -1)
                     this.roles.push({value: 'employee', viewValue: 'Employee'});

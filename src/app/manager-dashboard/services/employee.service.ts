@@ -7,6 +7,7 @@ import { SortColumn, SortDirection } from 'src/app/shared/directives/sortable.di
 import { AuthService } from 'src/app/shared/services/auth.service'; 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { EnvironmentUrlService } from 'src/app/shared/services/environment-url.service';
 
 interface SearchResult {
 	employees: IEmployee[];
@@ -59,7 +60,7 @@ export class EmployeeService {
 		sortDirection: '',
 	};
 
-	constructor(private authService: AuthService, private http: HttpClient, private pipe: DecimalPipe) {
+	constructor(private authService: AuthService, private http: HttpClient, private pipe: DecimalPipe, private envUrl: EnvironmentUrlService) {
 		this._search$
 			.pipe(
 				tap(() => this._loading$.next(true)),
@@ -75,7 +76,7 @@ export class EmployeeService {
 
 		this._search$.next();
 
-     	this.http.get<IEmployee[]>('https://localhost:7197/api/Employees/' + 
+     	this.http.get<IEmployee[]>(envUrl.urlAPIEmployees + 
       		this.authService.getCurrUser().username).subscribe(employees => {
 			this._employees = employees;
 		});		
@@ -163,21 +164,27 @@ export class EmployeeService {
 	}
 
 	GetEmployees():Observable<IEmployee[]>{
-		return this.http.get<IEmployee[]>('https://localhost:7197/api/Employees/' +
+		this.form.disable(); 
+		let result = this.http.get<IEmployee[]>(this.envUrl.urlAPIEmployees +
 			this.authService.getCurrUser().username);
+		this.form.enable();
+		return result; 
 	}
 
 	DeleteEmployee(id:number):Observable<number> {
-		return this.http.delete<number>('https://localhost:7197/api/Employees/' + id);
+		return this.http.delete<number>(this.envUrl.urlAPIEmployees + id);
 	} 
 
 	UpdateEmployee(employee:IEmployee):Observable<number> {
+		this.form.disable(); 
 		const httpOptions = {
 			headers: new HttpHeaders({
 			  'Content-Type':  'application/json',
 			})
 		};
-		return this.http.put<number>('https://localhost:7197/api/Employees', employee, httpOptions);
+		let result = this.http.put<number>(this.envUrl.urlAPIEmployees, employee, httpOptions);
+		this.form.enable(); 
+		return result; 
 	}
 
 	AddEmployee(employeeSM: IEmployee): Observable<IEmployee> {
@@ -187,7 +194,7 @@ export class EmployeeService {
 			})
 		};
 		console.log('the user is: ' + this.authService.getCurrUser().username);
-		const url = 'https://localhost:7197/api/Employees/' + this.authService.getCurrUser().username;
+		const url = this.envUrl.urlAPIEmployees + this.authService.getCurrUser().username;
 		return this.http.post<IEmployee>(url, employeeSM, httpOptions);
 	}
 

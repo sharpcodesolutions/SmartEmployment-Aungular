@@ -31,3 +31,7 @@ snack-bar-container.notification simple-snack-bar {
     height: 40px; 
     padding: 0px !important; 
 }
+
+form {
+    position: relative;
+}

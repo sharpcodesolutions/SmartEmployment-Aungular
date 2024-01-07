@@ -17,6 +17,7 @@ export class EmployeeComponent implements OnInit {
 
   // Variable to store shortLink from api response
   shortLink: string = "";
+  isSaving: boolean = false;
 
   constructor(private service: EmployeeService, private notificationService: NotifictionService, 
     public dialogRef: MatDialogRef<EmployeeComponent>, private fileUploadService: FileUploadService) {
@@ -36,23 +37,30 @@ export class EmployeeComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log('the value is: ' + this.employeeService.form.value.firstname);
     if(this.employeeService.form.valid) {
+      this.isSaving = true; 
       if(this.employeeService.form.get('id')?.value === 0)
       {
-        this.employeeService.AddEmployee(this.employeeService.form.value).subscribe(employee => console.log('employee created successfully'));
+        this.employeeService.AddEmployee(this.employeeService.form.value)
+        .subscribe(employee => {      
+          this.employeeService.form.reset();
+          this.employeeService.initialiseFormGroup();
+          this.notificationService.success('Employee created successfully');
+          this.isSaving = false;
+          this.onClose(); 
+        });
       }
       else 
       {
-        this.employeeService.UpdateEmployee(this.employeeService.form.value).subscribe(employee => console.log('employee updated successfully'));
+        this.employeeService.UpdateEmployee(this.employeeService.form.value)
+        .subscribe(employee => {
+          this.employeeService.form.reset();
+          this.employeeService.initialiseFormGroup();
+          this.notificationService.success('Employee created successfully');
+          this.isSaving = false;
+          this.onClose(); 
+        });
       }
-
-      console.log('the form is valid');
-      
-      this.employeeService.form.reset();
-      this.employeeService.initialiseFormGroup();
-      this.notificationService.success('Employee created successfully');
-      this.onClose(); 
     }
   }
 
@@ -75,7 +83,6 @@ export class EmployeeComponent implements OnInit {
 
                 // Short link via api response
                 this.shortLink = event.link;
-
                 this.loading = false; // Flag variable 
             }
         }
